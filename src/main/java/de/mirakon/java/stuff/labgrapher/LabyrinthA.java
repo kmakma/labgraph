@@ -19,6 +19,8 @@
 package de.mirakon.java.stuff.labgrapher;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
@@ -29,7 +31,7 @@ import java.util.concurrent.ThreadLocalRandom;
 class LabyrinthA {
 
     private Node[][] labyrinth;
-    private ArrayList<Node> addedNodes = new ArrayList<>();
+    private Set<Node> addedNodes = new HashSet<>();
     // lines
     private int sizeX;
     // rows
@@ -53,35 +55,74 @@ class LabyrinthA {
     private void createLab() {
         int currentX = ThreadLocalRandom.current().nextInt(sizeX / 2) * 2;
         int currentY = ThreadLocalRandom.current().nextInt(sizeY / 2) * 2;
-        addedNodes.add(labyrinth[currentX][currentY]);
-
-        ArrayList<Node> possibleConnectionNodes = findPossibleConnections();
-        if (!possibleConnectionNodes.isEmpty()) {
-            // TODO: 17.03.2017 wähle zufällig eine Verbindung 
-            // TODO: 17.03.2017 öffne angrenzede knoten und diesen horizontal oder vertikal  
+        if (addedNodes.add(labyrinth[currentX][currentY])) {
+            labyrinth[currentX][currentY].setToPath();
         }
+
+        int durchlauf = 1;
+        ArrayList<Node> possibleConnectionNodes = findPossibleConnections();
+        while (!possibleConnectionNodes.isEmpty()) {
+            Node newConnection = possibleConnectionNodes.get(ThreadLocalRandom.current().nextInt
+                    (possibleConnectionNodes.size()));
+            int conPosX = newConnection.getPosX();
+            int conPosY = newConnection.getPosY();
+            if (conPosX > 0 && labyrinth[conPosX - 1][conPosY].isPath()) {
+                openVerticalAt(conPosX, conPosY);
+            } else if (conPosX < labyrinth.length - 1 && labyrinth[conPosX + 1][conPosY].isPath()) {
+                openVerticalAt(conPosX, conPosY);
+            } else if (conPosY > 0 && labyrinth[conPosX][conPosY - 1].isPath()) {
+                openHorizontalAt(conPosX, conPosY);
+            } else if (conPosY < labyrinth[conPosX].length - 1 && labyrinth[conPosX][conPosY + 1].isPath()) {
+                openHorizontalAt(conPosX, conPosY);
+            } else {
+                throw new IllegalStateException("Verbindungsknoten findet keinen begehbaren Knoten");
+            }
+            possibleConnectionNodes = findPossibleConnections();
+        }
+    }
+
+    private void openHorizontalAt(int conPosX, int conPosY) {
+        labyrinth[conPosX][conPosY - 1].openEast();
+        labyrinth[conPosX][conPosY - 1].setToPath();
+        addedNodes.add(labyrinth[conPosX][conPosY - 1]);
+        labyrinth[conPosX][conPosY].openHorizontal();
+        labyrinth[conPosX][conPosY].setToPath();
+        labyrinth[conPosX][conPosY + 1].openWest();
+        labyrinth[conPosX][conPosY + 1].setToPath();
+        addedNodes.add(labyrinth[conPosX][conPosY + 1]);
+    }
+
+    private void openVerticalAt(int conPosX, int conPosY) {
+        labyrinth[conPosX - 1][conPosY].openSouth();
+        labyrinth[conPosX - 1][conPosY].setToPath();
+        addedNodes.add(labyrinth[conPosX - 1][conPosY]);
+        labyrinth[conPosX][conPosY].openVertical();
+        labyrinth[conPosX][conPosY].setToPath();
+        labyrinth[conPosX + 1][conPosY].openNorth();
+        labyrinth[conPosX + 1][conPosY].setToPath();
+        addedNodes.add(labyrinth[conPosX + 1][conPosY]);
     }
 
     private ArrayList<Node> findPossibleConnections() {
         ArrayList<Node> possibleConnectionNodes = new ArrayList<>();
         for (Node node : addedNodes) {
             if (node.isWallNorth() && node.getPosX() >= 2) {
-                if (!labyrinth[node.getPosX() - 2][node.getPosY()].isAnywhereOpen()) {
+                if (!labyrinth[node.getPosX() - 2][node.getPosY()].isPath()) {
                     possibleConnectionNodes.add(labyrinth[node.getPosX() - 1][node.getPosY()]);
                 }
             }
             if (node.isWallEast() && node.getPosY() < labyrinth[node.getPosX()].length - 2) {
-                if (!labyrinth[node.getPosX()][node.getPosY() + 2].isAnywhereOpen()) {
+                if (!labyrinth[node.getPosX()][node.getPosY() + 2].isPath()) {
                     possibleConnectionNodes.add(labyrinth[node.getPosX()][node.getPosY() + 1]);
                 }
             }
             if (node.isWallSouth() && node.getPosX() < labyrinth.length - 2) {
-                if (!labyrinth[node.getPosX() + 2][node.getPosY()].isAnywhereOpen()) {
+                if (!labyrinth[node.getPosX() + 2][node.getPosY()].isPath()) {
                     possibleConnectionNodes.add(labyrinth[node.getPosX() + 1][node.getPosY()]);
                 }
             }
             if (node.isWallWest() && node.getPosY() >= 2) {
-                if (!labyrinth[node.getPosX()][node.getPosY() - 2].isAnywhereOpen()) {
+                if (!labyrinth[node.getPosX()][node.getPosY() - 2].isPath()) {
                     possibleConnectionNodes.add(labyrinth[node.getPosX()][node.getPosY() - 1]);
                 }
             }

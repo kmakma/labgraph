@@ -26,10 +26,15 @@ class Node {
     private boolean wallEast = true;
     private boolean wallSouth = true;
     private boolean wallWest = true;
+    private boolean path = false;
 
     Node(int posX, int posY) {
         this.posX = posX;
         this.posY = posY;
+    }
+
+    public boolean isPath() {
+        return path;
     }
 
     boolean isWallEast() {
@@ -48,28 +53,28 @@ class Node {
         return wallNorth;
     }
 
-    public void openNorth() {
+    void openNorth() {
         wallNorth = false;
     }
 
-    public void openEast() {
+    void openEast() {
         wallEast = false;
     }
 
-    public void openSouth() {
+    void openSouth() {
         wallSouth = false;
     }
 
-    public void openWest() {
+    void openWest() {
         wallWest = false;
     }
 
-    public void openHorizontal() {
+    void openHorizontal() {
         wallEast = false;
         wallWest = false;
     }
 
-    public void openVertical() {
+    void openVertical() {
         wallNorth = false;
         wallSouth = false;
     }
@@ -84,5 +89,9 @@ class Node {
 
     boolean isAnywhereOpen() {
         return !(wallNorth && wallEast && wallSouth && wallWest);
+    }
+
+    void setToPath() {
+        path = true;
     }
 }

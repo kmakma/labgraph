@@ -38,8 +38,8 @@ public class LabyrinthController {
 
     public void initialize() {
 
-        labsizeX = 30;
-        labsizeY = 30;
+        labsizeX = 31;
+        labsizeY = 31;
         gridPaneSquareSize = 10.0;
 
         buildAndDrawLabs();
@@ -47,27 +47,39 @@ public class LabyrinthController {
 
     @FXML
     private void buildAndDrawLabs() {
-        System.out.print("Erstelle Labyrinthe...");
         // perfektes Labyrinth mit Jarní-Prim-Algorithmus
         boolean[][] boolLabA = new LabyrinthA(labsizeX, labsizeY).getBooleanLab();
 //        perfektes Labyrinth erweitert
 //        LabyrinthA labB = new LabyrinthA(30, 30);
 //        LabyrinthA labC = new LabyrinthA(30, 30);
-        System.out.println("\tfertig");
 
-        System.out.print("Fülle GridPanes...");
         fillGridPane(labA, boolLabA);
-        System.out.println("\tfertig");
-        System.out.println("");
     }
 
-    private void fillGridPane(GridPane labGridPane, boolean[][] boolLabA) {
-        for (int i = 0; i < boolLabA.length; i++) {
-            for (int j = 0; j < boolLabA[i].length; j++) {
-                if (boolLabA[i][j]) {
-                    labGridPane.add(white(), i, j);
+    private void fillGridPane(GridPane labGridPane, boolean[][] boolLab) {
+        for (int line = 0; line <= boolLab[0].length; line++) {
+            labGridPane.add(black(), line, 0);
+        }
+        for (int row = 0; row <= boolLab.length; row++) {
+            labGridPane.add(black(), 0, row);
+        }
+
+        if(boolLab.length % 2 == 1)        {
+            for (int line = 0; line <= boolLab[0].length+1; line++) {
+                labGridPane.add(black(), line, boolLab.length+1);
+            }
+        }
+        if(boolLab[0].length % 2 == 1) {
+            for (int row = 0; row <= boolLab.length+1; row++) {
+                labGridPane.add(black(), boolLab[0].length+1, row);
+            }
+        }
+        for (int i = 0; i < boolLab.length; i++) {
+            for (int j = 0; j < boolLab[i].length; j++) {
+                if (boolLab[i][j]) {
+                    labGridPane.add(white(), j + 1, i + 1);
                 } else {
-                    labGridPane.add(black(), i, j);
+                    labGridPane.add(black(), j + 1, i + 1);
                 }
             }
         }
