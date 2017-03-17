@@ -11,12 +11,18 @@
   -->
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
-<VBox spacing="10.0" xmlns="http://javafx.com/javafx/8.0.121"
-      xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.mirakon.java.stuff.labgrapher.LabyrinthController">
+<VBox alignment="TOP_CENTER" spacing="10.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="de.mirakon.java.stuff.labgrapher.LabyrinthController">
     <padding>
         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
     </padding>
-    <Label text="%greeting"/>
+    <HBox spacing="10.0">
+        <GridPane fx:id="labA" gridLinesVisible="true"/>
+        <GridPane fx:id="labB" gridLinesVisible="true"/>
+    </HBox>
+    <Button mnemonicParsing="false" onAction="#buildAndDrawLabs" text="%generate"/>
 </VBox>
