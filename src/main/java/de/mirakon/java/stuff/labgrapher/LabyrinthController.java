@@ -10,29 +10,6 @@
 
 package de.mirakon.java.stuff.labgrapher;
 
-import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
+public class LabyrinthController {
 
-import java.util.ResourceBundle;
-
-public class MainApp extends Application {
-
-    public static void main(String[] args) {
-        launch(args);
-    }
-
-    public void start(Stage stage) throws Exception {
-        ResourceBundle bundle = ResourceBundle.getBundle("Strings");
-        Parent mainLabParent = FXMLLoader.load(getClass().getResource("/layout/labyrinth.fxml"), bundle);
-
-        stage.setTitle("LabGrapher");
-        stage.setScene(new Scene(mainLabParent));
-        // TODO: 17.03.2017 setMinHeight/~Width
-        // stage.setMinHeight();
-        // stage.setMinWidth();
-        stage.show();
-    }
 }
