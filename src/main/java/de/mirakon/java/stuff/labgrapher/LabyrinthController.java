@@ -29,6 +29,10 @@ public class LabyrinthController {
     private GridPane labA;
     @FXML
     private GridPane labB;
+    @FXML
+    private GridPane labC;
+    @FXML
+    private GridPane labD;
 
     private double gridPaneSquareSize;
     private int labsizeX;
@@ -38,9 +42,9 @@ public class LabyrinthController {
 
     public void initialize() {
 
-        labsizeX = 31;
-        labsizeY = 31;
-        gridPaneSquareSize = 10.0;
+        labsizeX = 61;
+        labsizeY = 61;
+        gridPaneSquareSize = 7.0;
 
         buildAndDrawLabs();
     }
@@ -50,10 +54,14 @@ public class LabyrinthController {
         // perfektes Labyrinth mit Jarní-Prim-Algorithmus
         boolean[][] boolLabA = new LabyrinthA(labsizeX, labsizeY).getBooleanLab();
 //        perfektes Labyrinth erweitert
+        boolean[][] boolLabB = new LabyrinthB(labsizeX, labsizeY).getBooleanLab();
+        boolean[][] boolLabC = new LabyrinthC(labsizeX, labsizeY).getBooleanLab();
 //        LabyrinthA labB = new LabyrinthA(30, 30);
 //        LabyrinthA labC = new LabyrinthA(30, 30);
 
         fillGridPane(labA, boolLabA);
+        fillGridPane(labB, boolLabB);
+        fillGridPane(labC, boolLabC);
     }
 
     private void fillGridPane(GridPane labGridPane, boolean[][] boolLab) {
