@@ -32,19 +32,19 @@ class Node {
         this.posY = posY;
     }
 
-    public boolean isWallEast() {
+    boolean isWallEast() {
         return wallEast;
     }
 
-    public boolean isWallSouth() {
+    boolean isWallSouth() {
         return wallSouth;
     }
 
-    public boolean isWallWest() {
+    boolean isWallWest() {
         return wallWest;
     }
 
-    public boolean isWallNorth() {
+    boolean isWallNorth() {
         return wallNorth;
     }
 
@@ -74,15 +74,15 @@ class Node {
         wallSouth = false;
     }
 
-    public int getPosX() {
+    int getPosX() {
         return posX;
     }
 
-    public int getPosY() {
+    int getPosY() {
         return posY;
     }
 
-    public boolean isAnywhereOpen() {
+    boolean isAnywhereOpen() {
         return !(wallNorth && wallEast && wallSouth && wallWest);
     }
 }

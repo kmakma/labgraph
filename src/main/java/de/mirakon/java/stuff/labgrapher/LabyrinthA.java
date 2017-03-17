@@ -26,7 +26,7 @@ import java.util.concurrent.ThreadLocalRandom;
  * <p>
  * ACHTUNG: DIESE IMPLEMENTIERUNG IST SOWAS VON ÜBERHAUPT NICHT LAUFZEIT EFFIZIENT!!!
  */
-public class LabyrinthA {
+class LabyrinthA {
 
     private Node[][] labyrinth;
     private ArrayList<Node> addedNodes = new ArrayList<>();
