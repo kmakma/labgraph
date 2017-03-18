@@ -90,13 +90,37 @@ public class LabyrinthB extends LabyrinthC {
             case NORTH:
                 return !(seNeighbour || swNeighbour);
             case EAST:
-                return !(seNeighbour || neNeighbour);
+                return !(swNeighbour || nwNeighbour);
             case SOUTH:
                 return !(neNeighbour || nwNeighbour);
             case WEST:
-                return !(nwNeighbour || swNeighbour);
+                return !(neNeighbour || seNeighbour);
             default:
                 throw new IllegalStateException("Knoten hat keinen Nachbarn, wurde aber vom Nachbarn aufgerufen");
         }
     }
+
+    //    if(node.isWallNorth()&&node.getPosX()>=2)
+//    {
+//        node.openNorth();
+//        labyrinth[node.getPosX() - 1][node.getPosY()].openVertical();
+//        labyrinth[node.getPosX() - 2][node.getPosY()].openSouth();
+//    }
+//    if(node.isWallEast()&&node.getPosY() <labyrinth[node.getPosX()].length -2)
+//    {
+//        node.openEast();
+//        labyrinth[node.getPosX()][node.getPosY()].openHorizontal();
+//        labyrinth[node.getPosX() - 2][node.getPosY()].openWest();
+//    }
+//    if(node.isWallSouth()&&node.getPosX() <labyrinth.length -2)
+//    {
+//        node.openSouth();
+//        labyrinth[node.getPosX() + 1][node.getPosY()].openVertical();
+//        labyrinth[node.getPosX() + 2][node.getPosY()].openNorth();
+//    }
+//    if(node.isWallWest()&&node.getPosY()>=2)
+//    {
+//        node.openWest();
+//        labyrinth[node.getPosX()][node.getPosY() - 1].openHorizontal();
+//        labyrinth[node.getPosX()][node.getPosY() - 2].openEast();
 }

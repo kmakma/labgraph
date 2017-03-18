@@ -51,17 +51,20 @@ public class LabyrinthController {
 
     @FXML
     private void buildAndDrawLabs() {
-        // perfektes Labyrinth mit Jarní-Prim-Algorithmus
         boolean[][] boolLabA = new LabyrinthA(labsizeX, labsizeY).getBooleanLab();
-//        perfektes Labyrinth erweitert
         boolean[][] boolLabB = new LabyrinthB(labsizeX, labsizeY).getBooleanLab();
         boolean[][] boolLabC = new LabyrinthC(labsizeX, labsizeY).getBooleanLab();
-//        LabyrinthA labB = new LabyrinthA(30, 30);
-//        LabyrinthA labC = new LabyrinthA(30, 30);
+
+        // TODO: 18.03.2017 zeitmessung();
+
 
         fillGridPane(labA, boolLabA);
         fillGridPane(labB, boolLabB);
         fillGridPane(labC, boolLabC);
+    }
+
+    private void zeitmessung() {
+
     }
 
     private void fillGridPane(GridPane labGridPane, boolean[][] boolLab) {
