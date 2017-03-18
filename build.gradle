@@ -12,12 +12,24 @@ group 'de.mirakon.java.stuff'
 version '0.1.0'
 
 apply plugin: 'java'
+apply plugin: 'application'
 
+mainClassName = "de.mirakon.java.stuff.labgrapher.MainApp"
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 repositories {
     mavenCentral()
+}
+
+jar {
+    manifest {
+        attributes(
+                'Implementation-Title': 'LabGrapher',
+                'Implementation-Version': version,
+                'Main-Class': mainClassName
+        )
+    }
 }
 
 dependencies {
