@@ -39,34 +39,28 @@ public class LabyrinthController {
     private int labsizeY;
 
     // TODO: 17.03.2017 make 3 different labs
-
+    // TODO: 18.03.2017 add javaDoc and upload it to githubs personal pages
     public void initialize() {
 
-        labsizeX = 61;
-        labsizeY = 61;
-        gridPaneSquareSize = 7.0;
+        labsizeX = 91;
+        labsizeY = 91;
+        gridPaneSquareSize = 5.0;
 
         buildAndDrawLabs();
     }
 
     @FXML
     private void buildAndDrawLabs() {
+        // die Erstellung der labyrinthe geht schneller wenn sie in threads von statten geht
         boolean[][] boolLabA = new LabyrinthA(labsizeX, labsizeY).getBooleanLab();
         boolean[][] boolLabB = new LabyrinthB(labsizeX, labsizeY).getBooleanLab();
         boolean[][] boolLabC = new LabyrinthC(labsizeX, labsizeY).getBooleanLab();
-//        boolean[][] boolLabD = new LabyrinthD(labsizeX, labsizeY).getBooleanLab();
-
-        // TODO: 18.03.2017 zeitmessung();
-
+        boolean[][] boolLabD = new LabyrinthD(labsizeX, labsizeY).getBooleanLab();
 
         fillGridPane(labA, boolLabA);
         fillGridPane(labB, boolLabB);
         fillGridPane(labC, boolLabC);
-//        fillGridPane(labD, boolLabD);
-    }
-
-    private void zeitmessung() {
-
+        fillGridPane(labD, boolLabD);
     }
 
     private void fillGridPane(GridPane labGridPane, boolean[][] boolLab) {
@@ -77,14 +71,14 @@ public class LabyrinthController {
             labGridPane.add(black(), 0, row);
         }
 
-        if(boolLab.length % 2 == 1)        {
-            for (int line = 0; line <= boolLab[0].length+1; line++) {
-                labGridPane.add(black(), line, boolLab.length+1);
+        if (boolLab.length % 2 == 1) {
+            for (int line = 0; line <= boolLab[0].length + 1; line++) {
+                labGridPane.add(black(), line, boolLab.length + 1);
             }
         }
-        if(boolLab[0].length % 2 == 1) {
-            for (int row = 0; row <= boolLab.length+1; row++) {
-                labGridPane.add(black(), boolLab[0].length+1, row);
+        if (boolLab[0].length % 2 == 1) {
+            for (int row = 0; row <= boolLab.length + 1; row++) {
+                labGridPane.add(black(), boolLab[0].length + 1, row);
             }
         }
         for (int i = 0; i < boolLab.length; i++) {

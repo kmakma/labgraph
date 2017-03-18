@@ -18,6 +18,11 @@
 
 package de.mirakon.java.stuff.labgrapher;
 
+/**
+ * erweitertest Labyrinth mit Jarní-Prim-Algorithmus
+ * <p>
+ * ACHTUNG: DIESE IMPLEMENTIERUNG IST SOWAS VON ÜBERHAUPT NICHT LAUFZEIT EFFIZIENT!!!
+ */
 public class LabyrinthB extends LabyrinthC {
 
     private static final int NORTH = 0;
