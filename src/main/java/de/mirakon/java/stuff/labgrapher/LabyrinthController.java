@@ -54,6 +54,7 @@ public class LabyrinthController {
         boolean[][] boolLabA = new LabyrinthA(labsizeX, labsizeY).getBooleanLab();
         boolean[][] boolLabB = new LabyrinthB(labsizeX, labsizeY).getBooleanLab();
         boolean[][] boolLabC = new LabyrinthC(labsizeX, labsizeY).getBooleanLab();
+//        boolean[][] boolLabD = new LabyrinthD(labsizeX, labsizeY).getBooleanLab();
 
         // TODO: 18.03.2017 zeitmessung();
 
@@ -61,6 +62,7 @@ public class LabyrinthController {
         fillGridPane(labA, boolLabA);
         fillGridPane(labB, boolLabB);
         fillGridPane(labC, boolLabC);
+//        fillGridPane(labD, boolLabD);
     }
 
     private void zeitmessung() {
