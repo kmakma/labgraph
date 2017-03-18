@@ -42,8 +42,8 @@ public class LabyrinthController {
     // TODO: 18.03.2017 add javaDoc and upload it to githubs personal pages
     public void initialize() {
 
-        labsizeX = 91;
-        labsizeY = 91;
+        labsizeX = 51;
+        labsizeY = 51;
         gridPaneSquareSize = 5.0;
 
         buildAndDrawLabs();

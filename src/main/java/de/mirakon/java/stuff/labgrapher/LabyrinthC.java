@@ -31,7 +31,7 @@ import java.util.concurrent.ThreadLocalRandom;
 public class LabyrinthC {
 
     Node[][] labyrinth;
-    private Set<Node> addedNodes = new HashSet<>();
+    Set<Node> addedNodes = new HashSet<>();
     // lines
     private int sizeX;
     // rows
@@ -80,7 +80,7 @@ public class LabyrinthC {
         }
     }
 
-    private void openToNorthFrom(int conPosX, int conPosY) {
+    void openToNorthFrom(int conPosX, int conPosY) {
         labyrinth[conPosX - 1][conPosY].openSouth();
         labyrinth[conPosX - 1][conPosY].setToPath();
         addedNodes.add(labyrinth[conPosX - 1][conPosY]);
@@ -90,7 +90,7 @@ public class LabyrinthC {
 
     }
 
-    private void openToSouthFrom(int conPosX, int conPosY) {
+    void openToSouthFrom(int conPosX, int conPosY) {
         labyrinth[conPosX][conPosY].openSouth();
         labyrinth[conPosX][conPosY].setToPath();
         addedNodes.add(labyrinth[conPosX][conPosY]);
@@ -99,7 +99,7 @@ public class LabyrinthC {
         addedNodes.add(labyrinth[conPosX + 1][conPosY]);
     }
 
-    private void openToWestFrom(int conPosX, int conPosY) {
+    void openToWestFrom(int conPosX, int conPosY) {
         labyrinth[conPosX][conPosY].openWest();
         labyrinth[conPosX][conPosY].setToPath();
         addedNodes.add(labyrinth[conPosX][conPosY]);
@@ -108,7 +108,7 @@ public class LabyrinthC {
         addedNodes.add(labyrinth[conPosX][conPosY - 1]);
     }
 
-    private void openToEastFrom(int conPosX, int conPosY) {
+    void openToEastFrom(int conPosX, int conPosY) {
         labyrinth[conPosX][conPosY + 1].openWest();
         labyrinth[conPosX][conPosY + 1].setToPath();
         addedNodes.add(labyrinth[conPosX][conPosY + 1]);

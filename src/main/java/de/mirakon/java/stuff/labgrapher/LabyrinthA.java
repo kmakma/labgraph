@@ -30,8 +30,8 @@ import java.util.concurrent.ThreadLocalRandom;
  */
 class LabyrinthA {
 
-    private Node[][] labyrinth;
-    private Set<Node> addedNodes = new HashSet<>();
+    Node[][] labyrinth;
+    Set<Node> addedNodes = new HashSet<>();
     // lines
     private int sizeX;
     // rows
@@ -52,7 +52,7 @@ class LabyrinthA {
     }
 
 
-    private void createLab() {
+    void createLab() {
         int currentX = ThreadLocalRandom.current().nextInt(sizeX / 2) * 2;
         int currentY = ThreadLocalRandom.current().nextInt(sizeY / 2) * 2;
         if (addedNodes.add(labyrinth[currentX][currentY])) {
@@ -80,7 +80,7 @@ class LabyrinthA {
         }
     }
 
-    private void openHorizontalAt(int conPosX, int conPosY) {
+    void openHorizontalAt(int conPosX, int conPosY) {
         labyrinth[conPosX][conPosY - 1].openEast();
         labyrinth[conPosX][conPosY - 1].setToPath();
         addedNodes.add(labyrinth[conPosX][conPosY - 1]);
@@ -91,7 +91,7 @@ class LabyrinthA {
         addedNodes.add(labyrinth[conPosX][conPosY + 1]);
     }
 
-    private void openVerticalAt(int conPosX, int conPosY) {
+    void openVerticalAt(int conPosX, int conPosY) {
         labyrinth[conPosX - 1][conPosY].openSouth();
         labyrinth[conPosX - 1][conPosY].setToPath();
         addedNodes.add(labyrinth[conPosX - 1][conPosY]);
@@ -102,7 +102,7 @@ class LabyrinthA {
         addedNodes.add(labyrinth[conPosX + 1][conPosY]);
     }
 
-    private ArrayList<Node> findPossibleConnections() {
+    ArrayList<Node> findPossibleConnections() {
         ArrayList<Node> possibleConnectionNodes = new ArrayList<>();
         for (Node node : addedNodes) {
             if (node.isWallNorth() && node.getPosX() >= 2) {
