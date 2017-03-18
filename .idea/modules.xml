@@ -2,9 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/lab-grapher.iml" filepath="$PROJECT_DIR$/.idea/modules/lab-grapher.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/lab-grapher_main.iml" filepath="$PROJECT_DIR$/.idea/modules/lab-grapher_main.iml" group="lab-grapher" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/lab-grapher_test.iml" filepath="$PROJECT_DIR$/.idea/modules/lab-grapher_test.iml" group="lab-grapher" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/labgrapher.iml" filepath="$PROJECT_DIR$/.idea/modules/labgrapher.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/labgrapher_main.iml" filepath="$PROJECT_DIR$/.idea/modules/labgrapher_main.iml" group="labgrapher" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/labgrapher_test.iml" filepath="$PROJECT_DIR$/.idea/modules/labgrapher_test.iml" group="labgrapher" />
     </modules>
   </component>
 </project>
