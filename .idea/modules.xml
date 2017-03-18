@@ -2,9 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/labgrapher.iml" filepath="$PROJECT_DIR$/.idea/modules/labgrapher.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/labgrapher_main.iml" filepath="$PROJECT_DIR$/.idea/modules/labgrapher_main.iml" group="labgrapher" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/labgrapher_test.iml" filepath="$PROJECT_DIR$/.idea/modules/labgrapher_test.iml" group="labgrapher" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/mazegrapher.iml" filepath="$PROJECT_DIR$/.idea/modules/mazegrapher.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/mazegrapher_main.iml" filepath="$PROJECT_DIR$/.idea/modules/mazegrapher_main.iml" group="mazegrapher" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/mazegrapher_test.iml" filepath="$PROJECT_DIR$/.idea/modules/mazegrapher_test.iml" group="mazegrapher" />
     </modules>
   </component>
 </project>

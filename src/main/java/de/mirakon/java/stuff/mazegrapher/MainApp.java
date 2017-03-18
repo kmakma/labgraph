@@ -8,5 +8,31 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-rootProject.name = 'mazegrapher'
+package de.mirakon.java.stuff.mazegrapher;
 
+import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+
+import java.util.ResourceBundle;
+
+public class MainApp extends Application {
+
+    public static void main(String[] args) {
+        launch(args);
+    }
+
+    public void start(Stage stage) throws Exception {
+        ResourceBundle bundle = ResourceBundle.getBundle("Strings");
+        Parent mainLabParent = FXMLLoader.load(getClass().getResource("/layout/labyrinth.fxml"), bundle);
+
+        stage.setTitle("MazeGrapher");
+        stage.setScene(new Scene(mainLabParent));
+        // TODO: 17.03.2017 setMinHeight/~Width
+        // stage.setMinHeight();
+        // stage.setMinWidth();
+        stage.show();
+    }
+}
