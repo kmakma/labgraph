@@ -8,35 +8,36 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-group 'de.mirakon.java.stuff'
-version '0.2.01'
+package de.mirakon.java.stuff.mazegrapher.ui;
 
-apply plugin: 'java'
-apply plugin: 'application'
+import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 
-mainClassName = "de.mirakon.java.stuff.mazegrapher.ui.MainApp"
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
+import java.util.ResourceBundle;
 
-repositories {
-    mavenCentral()
-}
+public class MainApp extends Application {
 
-jar {
-    manifest {
-        attributes(
-                'Implementation-Title': 'MazeGrapher',
-                'Implementation-Version': version,
-                'Main-Class': mainClassName
-        )
+    public static void main(String[] args) {
+        launch(args);
     }
-}
 
-javadoc {
-    classpath += sourceSets.main.compileClasspath
-    source += sourceSets.main.allJava
-}
+    public void start(Stage stage) throws Exception {
+        ResourceBundle bundle = ResourceBundle.getBundle("Strings");
+        Parent mainLabParent = FXMLLoader.load(getClass().getResource("/layout/labyrinth.fxml"), bundle);
+//        Parent mainMazeParent = FXMLLoader.load(getClass().getResource("/layout/mazegrapher.fxml"), bundle);
 
-dependencies {
-    testCompile group: 'junit', name: 'junit', version: '4.11'
+        stage.setTitle("MazeGrapher");
+        stage.setScene(new Scene(mainLabParent));
+//        stage.setScene(new Scene(mainMazeParent));
+        // TODO: 17.03.2017 setMinHeight/~Width
+        // stage.setMinHeight();
+        // stage.setMinWidth();
+        stage.show();
+        Object a = new Object();
+
+    }
+
 }
