@@ -12,14 +12,29 @@ package de.mirakon.java.stuff.mazegrapher.ui;
 
 import de.mirakon.java.stuff.mazegrapher.mazes.Maze;
 import de.mirakon.java.stuff.mazegrapher.mazes.MazeCoordinator;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
 import javafx.scene.control.Accordion;
+import javafx.scene.control.ListView;
+import javafx.scene.control.SplitPane;
+import javafx.scene.control.TitledPane;
+import javafx.scene.control.cell.CheckBoxListCell;
+import javafx.util.Callback;
 
+import java.util.Map;
 import java.util.TreeMap;
 
 public class MazegrapherController {
 
-    public Accordion accordionMazeVariations;
-    TreeMap<String, TreeMap<String, Class<Maze>>> mazeVariations;
+    public SplitPane splitPaneMazeVars;
+    @FXML
+    private Accordion accordionMazeVariations;
+    private TreeMap<String, TreeMap<String, Maze>> mazeVariations;
 
 
     public void initialize() {
@@ -28,9 +43,88 @@ public class MazegrapherController {
     }
 
     private void populateAccordion() {
-        accordionMazeVariations.getPanes().clear();
-        MazeCoordinator.getDefaultMazeVariations();
+        ObservableList<TitledPane> accMVTitledPanes = accordionMazeVariations.getPanes();
+        accMVTitledPanes.clear();
 
+        // FIXME: 21.03.2017 zeug umbenennen, größen (breiten, höhen) anpassen aaand stuff
+
+        mazeVariations = MazeCoordinator.getDefaultMazeVariations();
+
+        System.out.println(mazeVariations.size());
+
+        TitledPane paneToAdd;
+        for (Map.Entry<String, TreeMap<String, Maze>> mazeVarEntry : mazeVariations.entrySet()) {
+            // TODO: 20.03.2017 erstelle zuerst die listview
+            ListView<MyItem> listView = new ListView<>();
+
+            TreeMap<String, Maze> mazeCategory = mazeVarEntry.getValue();
+
+            // TODO: 21.03.2017 nur set nehmen nicht map entries?
+            for (Map.Entry<String, Maze> mazeCatEntry : mazeCategory.entrySet()) {
+                MyItem myItem = new MyItem(mazeCatEntry.getKey(), false);
+
+                myItem.inUseProperty().addListener((obs, wasOn, isNowOn) -> {
+                    System.out.println(myItem.getMazeVariant() + " changed on state from " + wasOn + " to " + isNowOn);
+                });
+
+                listView.getItems().add(myItem);
+            }
+
+
+            listView.setCellFactory(CheckBoxListCell.forListView(new Callback<MyItem, ObservableValue<Boolean>>() {
+                @Override
+                public ObservableValue<Boolean> call(MyItem myItem) {
+                    return myItem.inUseProperty();
+                }
+            }));
+
+            paneToAdd = new TitledPane(mazeVarEntry.getKey(), listView);
+            accMVTitledPanes.add(paneToAdd);
+        }
+
+
+        System.out.println(accordionMazeVariations.getPanes().size());
+        // TODO: 20.03.2017 erstelle für jede kategorie eine TitledPane, mit einer ListView mit check boxen (vorgehen erstmal eine erstellen und schauen wo was (listener etc) gebraucht wird
+    }
+
+    private static class MyItem {
+        // TODO: 21.03.2017 umwege über this.etc nötig?
+        private final StringProperty mazeVariant = new SimpleStringProperty();
+        private final BooleanProperty inUse = new SimpleBooleanProperty();
+
+        public MyItem (String mazeVariantName, boolean inUse) {
+            setMazeVariant(mazeVariantName);
+            setInUse(inUse);
+        }
+
+        public final void setMazeVariant(final String mazeVariantName) {
+            this.mazeVariantProperty().set(mazeVariantName);
+        }
+
+        public final StringProperty mazeVariantProperty() {
+            return this.mazeVariant;
+        }
+
+        public String getMazeVariant() {
+            return this.mazeVariantProperty().get();
+        }
+
+        public final void setInUse(final boolean inUse) {
+            this.inUseProperty().set(inUse);
+        }
+
+        public final BooleanProperty inUseProperty() {
+            return this.inUse;
+        }
+
+        public final boolean getInUse() {
+            return  this.inUseProperty().get();
+        }
+
+        @Override
+        public String toString() {
+            return  getMazeVariant();
+        }
     }
 
     // TODO: 19.03.2017 finde alle maze generator klassen, eigene (pfad/referenz in ner xml oder ner klasse?) und dann fremde (i-wie per plugin? ^^) und füge sie korrekt in die comboBox ein
