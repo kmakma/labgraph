@@ -10,12 +10,14 @@
   ~ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
   -->
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Accordion?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
 
 <VBox xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.mirakon.java.stuff.mazegrapher.ui.MazegrapherController">
@@ -30,36 +32,17 @@
             <MenuItem mnemonicParsing="false" text="About" />
         </Menu>
     </MenuBar>
-    <BorderPane>
-        <top>
-            <Label text="paar optionen" BorderPane.alignment="CENTER">
-            <BorderPane.margin>
-               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-            </BorderPane.margin></Label>
-        </top>
-        <left>
-            <Label text="maze varianten auswahl" BorderPane.alignment="CENTER">
-            <BorderPane.margin>
-               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-            </BorderPane.margin></Label>
-        </left>
-        <center>
-            <Label text="maze &amp; ggf maze graph" BorderPane.alignment="CENTER">
-            <BorderPane.margin>
-               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-            </BorderPane.margin></Label>
-        </center>
-        <right>
-            <Label text="rest?" BorderPane.alignment="CENTER">
-            <BorderPane.margin>
-               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-            </BorderPane.margin></Label>
-        </right>
-        <bottom>
-            <Label text="funtkonsbuttons" BorderPane.alignment="CENTER">
-            <BorderPane.margin>
-               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-            </BorderPane.margin></Label>
-        </bottom>
-    </BorderPane>
+    <SplitPane dividerPositions="0.29797979797979796" prefHeight="160.0" prefWidth="200.0">
+        <ScrollPane prefHeight="200.0" prefWidth="200.0">
+            <Accordion fx:id="accordionMazeVariations">
+                <panes>
+                    <!-- TODO titledPane pro kategorie perfekte Labyrinthe, Labyrinthe mit Kreisen, etc-->
+                    <TitledPane animated="false" text="untitled 1">
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                    </TitledPane>
+                </panes>
+            </Accordion>
+        </ScrollPane>
+        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0" />
+    </SplitPane>
 </VBox>

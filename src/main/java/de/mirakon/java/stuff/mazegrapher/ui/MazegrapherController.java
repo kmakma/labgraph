@@ -10,5 +10,28 @@
 
 package de.mirakon.java.stuff.mazegrapher.ui;
 
+import de.mirakon.java.stuff.mazegrapher.mazes.Maze;
+import de.mirakon.java.stuff.mazegrapher.mazes.MazeCoordinator;
+import javafx.scene.control.Accordion;
+
+import java.util.TreeMap;
+
 public class MazegrapherController {
+
+    public Accordion accordionMazeVariations;
+    TreeMap<String, TreeMap<String, Class<Maze>>> mazeVariations;
+
+
+    public void initialize() {
+        // TODO: 19.03.2017 create maze depending on what was choosen
+        populateAccordion();
+    }
+
+    private void populateAccordion() {
+        accordionMazeVariations.getPanes().clear();
+        MazeCoordinator.getDefaultMazeVariations();
+
+    }
+
+    // TODO: 19.03.2017 finde alle maze generator klassen, eigene (pfad/referenz in ner xml oder ner klasse?) und dann fremde (i-wie per plugin? ^^) und füge sie korrekt in die comboBox ein
 }
