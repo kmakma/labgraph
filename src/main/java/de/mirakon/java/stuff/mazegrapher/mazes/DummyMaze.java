@@ -10,15 +10,27 @@
 
 package de.mirakon.java.stuff.mazegrapher.mazes;
 
-public interface Maze {
+public class DummyMaze extends AbstractMaze {
 
+    private static final String MAZE_NAME = "Dummy Maze";
+    private static final String MAZE_CATEGORY = "Dummy Mazes";
 
-    // TODO: 20.03.2017 getNewInstance mit argumenten hinzufügen
+    public DummyMaze() {
+        super();
+    }
 
-    String getMazeCategory();
+    @Override
+    public String getMazeCategory() {
+        return MAZE_CATEGORY;
+    }
 
-    String getMazeName();
+    @Override
+    public String getMazeName() {
+        return MAZE_NAME;
+    }
 
-    // TODO: 20.03.2017 getMazePlugin might change
-    String getMazePlugin();
+    @Override
+    public String getMazePlugin() {
+        return null;
+    }
 }

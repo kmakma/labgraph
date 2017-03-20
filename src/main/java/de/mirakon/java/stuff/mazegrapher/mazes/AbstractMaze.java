@@ -10,15 +10,8 @@
 
 package de.mirakon.java.stuff.mazegrapher.mazes;
 
-public interface Maze {
+public abstract class AbstractMaze implements Maze {
 
-
-    // TODO: 20.03.2017 getNewInstance mit argumenten hinzufügen
-
-    String getMazeCategory();
-
-    String getMazeName();
-
-    // TODO: 20.03.2017 getMazePlugin might change
-    String getMazePlugin();
+    public AbstractMaze() {
+    }
 }
