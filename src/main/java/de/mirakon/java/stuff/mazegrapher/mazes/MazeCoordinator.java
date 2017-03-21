@@ -18,12 +18,10 @@ import java.util.TreeMap;
 public class MazeCoordinator {
 
     public static TreeMap<String, TreeMap<String, Maze>> getDefaultMazeVariations() {
-        return foo(null, getDefaultMazes());
+        return putMazesInMap(null, getDefaultMazes());
     }
 
-    // FIXME: 21.03.2017 variablen deklarationen (in allen klassen) in die schleifen reinpacken wenn nicht außerhalb nötig
-
-    private static TreeMap<String, TreeMap<String, Maze>> foo(@Nullable TreeMap<String, TreeMap<String, Maze>> mazeVariations, ArrayList<Maze> mazes) {
+    private static TreeMap<String, TreeMap<String, Maze>> putMazesInMap(@Nullable TreeMap<String, TreeMap<String, Maze>> mazeVariations, ArrayList<Maze> mazes) {
         if (mazeVariations == null) {
             mazeVariations = new TreeMap<>();
         }
