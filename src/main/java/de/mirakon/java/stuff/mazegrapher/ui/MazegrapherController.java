@@ -35,23 +35,14 @@ public class MazegrapherController {
     private Accordion accordionMazes;
 
     private TreeMap<String, TreeMap<String, Maze>> mazes;
-
     private Set<String> checkedMazes = Collections.synchronizedSet(new HashSet<>());
 
-    private Set<String> testCheckedMazesSet = new HashSet<>();
-
-
     public void initialize() {
-        // TODO: 19.03.2017 create maze depending on what was choosen
         populateAccordion();
+        // TODO: 19.03.2017 create maze depending on what's choosen
     }
 
-    // FIXME: 21.03.2017 zeug umbenennen, größen (breiten, höhen) anpassen aaand stuff
-
-    // FIXME: 21.03.2017 variablen deklarationen (in allen klassen) in die schleifen reinpacken wenn nicht außerhalb nötig
-
     private void populateAccordion() {
-        // TODO: 21.03.2017 größenanpassung des Accordion, TitledPanes und ListViews
         // Update which mazes shall be used
         mazes = MazeCoordinator.getDefaultMazeMap();
         // Clear current accordion, to repopulate it
@@ -64,16 +55,10 @@ public class MazegrapherController {
             for (String mazeName : entryMazeCategory.getValue().keySet()) {
                 MazeListItem mazeItem = new MazeListItem(mazeName, false);
                 mazeItem.checkedProperty().addListener((observable, wasChecked, isNowChecked) -> {
-                    // TODO: 21.03.2017 checkedMazes-Set befüllen (also das unten ändern)
-                    System.out.println(mazeItem.getMazeName() + " changed on state from " + wasChecked + " to " + isNowChecked + "; observable is " + observable);
-                    if(isNowChecked) {
-                        if(!testCheckedMazesSet.add(mazeItem.getMazeName())) {
-                            System.err.println("Konnte Item nicht hinzufügen!!!");
-                        }
+                    if (isNowChecked) {
+                        checkedMazes.add(mazeItem.getMazeName());
                     } else {
-                        if (!testCheckedMazesSet.remove(mazeItem.getMazeName())) {
-                            System.err.println("Konnte Item nicht entfernen!!!");
-                        }
+                        checkedMazes.remove(mazeItem.getMazeName());
                     }
                 });
                 mazesListView.getItems().add(mazeItem);

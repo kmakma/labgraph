@@ -9,7 +9,6 @@
   ~
   ~ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
   -->
-<!-- TODO prefWidhts und Height entfernen/ersetzten -->
 
 <?import javafx.scene.control.Accordion?>
 <?import javafx.scene.control.Menu?>
@@ -32,10 +31,11 @@
             <MenuItem mnemonicParsing="false" text="About"/>
         </Menu>
     </MenuBar>
-    <SplitPane dividerPositions="0.3" VBox.vgrow="ALWAYS">
-        <ScrollPane fitToHeight="true" fitToWidth="true">
+    <!-- TODO splitPane eine prefWidth und Höhe geben, den kindern nur minimal werte -->
+    <SplitPane dividerPositions="0.3" VBox.vgrow="ALWAYS" prefWidth="500.0" prefHeight="300.0">
+        <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" minWidth="0.0">
             <Accordion fx:id="accordionMazes"/>
         </ScrollPane>
-        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0"/>
+        <AnchorPane minHeight="0.0" minWidth="0.0"/>
     </SplitPane>
 </VBox>
