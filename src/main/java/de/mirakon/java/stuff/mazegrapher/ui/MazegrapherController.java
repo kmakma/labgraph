@@ -23,60 +23,111 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TitledPane;
 import javafx.scene.control.cell.CheckBoxListCell;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class MazegrapherController {
 
     @FXML
     private Accordion accordionMazes;
 
-    private TreeMap<String, TreeMap<String, Maze>> mazes;
+    private TreeMap<String, Maze> mazes;
     private Set<String> checkedMazes = Collections.synchronizedSet(new HashSet<>());
 
     public void initialize() {
+        // TODO: 21.03.2017 mazes not sorted by category needed
+        fetchMazes();
         populateAccordion();
-        // TODO: 19.03.2017 create maze depending on what's choosen
+        createRandomMaze();
+        // TODO: 19.03.2017 create maze depending on what's choosen, null maze abfangen
+    }
+
+    private void fetchMazes() {
+        // TODO: 21.03.2017 with plugin to more :P
+        mazes = MazeCoordinator.getDefaultMazeMap();
     }
 
     private void populateAccordion() {
-        // Update which mazes shall be used
-        mazes = MazeCoordinator.getDefaultMazeMap();
+        // Sort mazes by category
+        TreeMap<String, ArrayList<String>> mazesByCategories = getMazeNamesByCategory();
         // Clear current accordion, to repopulate it
         ObservableList<TitledPane> accMazeTitledPanes = accordionMazes.getPanes();
         accMazeTitledPanes.clear();
         // Add for each maze category a TitledPane with a ListView containing mazes of corresponding category
-        for (Map.Entry<String, TreeMap<String, Maze>> entryMazeCategory : mazes.entrySet()) {
+        for (Map.Entry<String, ArrayList<String>> mazeCategory : mazesByCategories.entrySet()) {
             // Create a ListView and populate it with mazes of one Category
-            ListView<MazeListItem> mazesListView = new ListView<>();
-            for (String mazeName : entryMazeCategory.getValue().keySet()) {
-                MazeListItem mazeItem = new MazeListItem(mazeName, false);
-                mazeItem.checkedProperty().addListener((observable, wasChecked, isNowChecked) -> {
+            ListView<MazeItem> mazeItemListView = new ListView<>();
+            for (String mazeName : mazeCategory.getValue()) {
+                MazeItem mazeItem = new MazeItem(mazeName, false);
+                mazeItem.checkedProperty().addListener((obs, wasChecked, isNowChecked) -> {
                     if (isNowChecked) {
                         checkedMazes.add(mazeItem.getMazeName());
                     } else {
                         checkedMazes.remove(mazeItem.getMazeName());
                     }
                 });
-                mazesListView.getItems().add(mazeItem);
+                mazeItemListView.getItems().add(mazeItem);
             }
             // Add check boxes to the list items
-            mazesListView.setCellFactory(CheckBoxListCell.forListView(MazeListItem::checkedProperty));
+            mazeItemListView.setCellFactory(CheckBoxListCell.forListView(MazeItem::checkedProperty));
             // Add the ListView to a TitledPane and add latter one to the Accordion
-            accMazeTitledPanes.add(new TitledPane(entryMazeCategory.getKey(), mazesListView));
+            accMazeTitledPanes.add(new TitledPane(mazeCategory.getKey(), mazeItemListView));
         }
 
-        // TODO: 21.03.2017 look up from preferences or stuff, and set at least one to true / selected
+        // TODO: 21.03.2017 look up from preferences or stuff, and set at least one to true / selected (tu in methode die boolean zurückgibt)
     }
 
-    private static class MazeListItem {
+    private TreeMap<String, ArrayList<String>> getMazeNamesByCategory() {
+        TreeMap<String, ArrayList<String>> mazesByCategories = new TreeMap<>();
+        for (Map.Entry<String, Maze> mazeEntry : mazes.entrySet()) {
+            String mCategory = mazeEntry.getValue().getMazeCategory();
+            if (mCategory == null || "".equals(mCategory)) {
+                // TODO: 21.03.2017 throw exception...maze without a category
+                System.err.println("Temporary Error Message: oh come on... where's the maze category?!");
+            }
+
+            ArrayList<String> categoryMazes = mazesByCategories.get(mCategory);
+            if (categoryMazes == null) {
+                categoryMazes = new ArrayList<>();
+                categoryMazes.add(mazeEntry.getKey());
+                mazesByCategories.put(mCategory, categoryMazes);
+            } else {
+                categoryMazes.add(mazeEntry.getKey());
+            }
+        }
+        return mazesByCategories;
+    }
+
+    private void createRandomMaze() {
+        String[] checkedMazes = this.checkedMazes.toArray(new String[this.checkedMazes.size()]);
+        String mazeName;
+        if (checkedMazes.length > 0) {
+            mazeName = checkedMazes[ThreadLocalRandom.current().nextInt(checkedMazes.length)];
+        } else {
+            // TODO: 21.03.2017 warnmeldung das keine mazes ausgewählt sind und das erste (mit namen) verwendet wird
+            // TODO: 21.03.2017 get & check first (wirft fehlermeldung falls kein maze gefunden)
+            mazeName = null;
+        }
+        if (mazeName != null) {
+            Maze maze = mazes.get(mazeName);
+            if(maze != null) {
+                // TODO: 21.03.2017 call maze.newInstance stuff
+            } else {
+                // TODO: 21.03.2017 error: konnte maze mit namen xy nicht finden
+            }
+        }
+    }
+
+    private static class MazeItem {
         private final StringProperty mazeName = new SimpleStringProperty();
         private final BooleanProperty checked = new SimpleBooleanProperty();
 
-        MazeListItem(String mazeName, boolean checked) {
+        MazeItem(String mazeName, boolean checked) {
             setMazeName(mazeName);
             setChecked(checked);
         }

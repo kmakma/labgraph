@@ -17,11 +17,40 @@ import java.util.TreeMap;
 
 public class MazeCoordinator {
 
-    public static TreeMap<String, TreeMap<String, Maze>> getDefaultMazeMap() {
+    public static TreeMap<String, Maze> getDefaultMazeMap() {
         return putMazesInMap(null, getDefaultMazes());
     }
 
-    private static TreeMap<String, TreeMap<String, Maze>> putMazesInMap(@Nullable TreeMap<String, TreeMap<String, Maze>> mazeVariations, ArrayList<Maze> mazes) {
+    private static TreeMap<String, Maze> putMazesInMap (@Nullable TreeMap<String, Maze> mazeTree, ArrayList<Maze> mazes) {
+        if (mazeTree == null) {
+            mazeTree = new TreeMap<>();
+        }
+
+        for (Maze maze : mazes) {
+            if (maze.getMazeName() == null || "".equals(maze.getMazeName())) {
+                // TODO: 21.03.2017 throw exception...somebody fucked up a maze ;)
+                System.err.println("Temporary Error Message: some idiot tried to smuggle a maze without a name into the system!");
+            }
+
+            if(mazeTree.putIfAbsent(maze.getMazeName(), maze) != null) {
+                String newMazeName = maze.getMazePlugin();
+                if (newMazeName == null || "".equals(newMazeName)) {
+                    // TODO: 21.03.2017 throw exception (tried to insert a maze without a plugin name)
+                    System.err.println("Temporary Error Message: tried to insert a duplicate maze without a plugin name!");
+                } else {
+                    newMazeName = String.format("%s (%s)", maze.getMazeName(), newMazeName);
+                    if (mazeTree.put(newMazeName, maze) != null) {
+                        // TODO: 21.03.2017 throw exception duplicate mazeName & duplicate pluginName
+                        System.err.println("Temporary Error Message: tried inserting a maze with a duplicate name and plugin!");
+                    }
+                }
+            }
+        }
+        return mazeTree;
+    }
+
+    @Deprecated
+    private static TreeMap<String, TreeMap<String, Maze>> putMazesInMapByCategory(@Nullable TreeMap<String, TreeMap<String, Maze>> mazeVariations, ArrayList<Maze> mazes) {
         if (mazeVariations == null) {
             mazeVariations = new TreeMap<>();
         }
@@ -29,7 +58,7 @@ public class MazeCoordinator {
         TreeMap<String, Maze> mazeCategory;
         for (Maze maze : mazes) {
             if (maze.getMazeCategory() == null || "".equals(maze.getMazeCategory()) || maze.getMazeName() == null || "".equals(maze.getMazeName())) {
-                // TODO: 20.03.2017 throw some nice exception
+                // TODO LATER: (deprecated) throw exception
                 throw new NullPointerException();
             }
 
@@ -41,12 +70,12 @@ public class MazeCoordinator {
                 if (mazeCategory.putIfAbsent(maze.getMazeName(), maze) != null) {
                     String mazeName = maze.getMazePlugin();
                     if (mazeName == null || "".equals(mazeName)) {
-                        // TODO: 20.03.2017 throw exception (maze xy hat keinen plugin name)
+                        // TODO LATER: (deprecated) throw exception
                         throw new NullPointerException();
                     } else {
                         mazeName = String.format("%s (%s)", maze.getMazeName(), mazeName);
                         if (mazeCategory.putIfAbsent(mazeName, maze) != null) {
-                            // TODO: 20.03.2017 throw exception duplicate mazeName in plugin xy
+                            // TODO LATER: (deprecated) throw exception
                         }
                     }
                 }
