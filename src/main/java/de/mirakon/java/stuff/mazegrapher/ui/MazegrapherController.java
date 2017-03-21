@@ -23,7 +23,10 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TitledPane;
 import javafx.scene.control.cell.CheckBoxListCell;
 
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 
 public class MazegrapherController {
@@ -32,6 +35,10 @@ public class MazegrapherController {
     private Accordion accordionMazes;
 
     private TreeMap<String, TreeMap<String, Maze>> mazes;
+
+    private Set<String> checkedMazes = Collections.synchronizedSet(new HashSet<>());
+
+    private Set<String> testCheckedMazesSet = new HashSet<>();
 
 
     public void initialize() {
@@ -53,64 +60,69 @@ public class MazegrapherController {
         // Add for each maze category a TitledPane with a ListView containing mazes of corresponding category
         for (Map.Entry<String, TreeMap<String, Maze>> entryMazeCategory : mazes.entrySet()) {
             // Create a ListView and populate it with mazes of one Category
-            ListView<MyItem> listView = new ListView<>();
+            ListView<MazeListItem> mazesListView = new ListView<>();
             for (String mazeName : entryMazeCategory.getValue().keySet()) {
-                MyItem mazeItem = new MyItem(mazeName, false);
-                mazeItem.inUseProperty().addListener((observable, wasInUse, isNowInUse) -> {
-                    // TODO: 21.03.2017 was ist sinnvoller, von hier eine liste updaten welche mazes inUse sind ODER bei zugriff die listViews durchiterieren und status prüfen
-                    // diese info wird benötigt wenn der (zufällige) maze ausgewählt wird
-                    System.out.println(mazeItem.getMazeVariant() + " changed on state from " + wasInUse + " to " + isNowInUse);
+                MazeListItem mazeItem = new MazeListItem(mazeName, false);
+                mazeItem.checkedProperty().addListener((observable, wasChecked, isNowChecked) -> {
+                    // TODO: 21.03.2017 checkedMazes-Set befüllen (also das unten ändern)
+                    System.out.println(mazeItem.getMazeName() + " changed on state from " + wasChecked + " to " + isNowChecked + "; observable is " + observable);
+                    if(isNowChecked) {
+                        if(!testCheckedMazesSet.add(mazeItem.getMazeName())) {
+                            System.err.println("Konnte Item nicht hinzufügen!!!");
+                        }
+                    } else {
+                        if (!testCheckedMazesSet.remove(mazeItem.getMazeName())) {
+                            System.err.println("Konnte Item nicht entfernen!!!");
+                        }
+                    }
                 });
-                listView.getItems().add(mazeItem);
+                mazesListView.getItems().add(mazeItem);
             }
             // Add check boxes to the list items
-            listView.setCellFactory(CheckBoxListCell.forListView(MyItem::inUseProperty));
+            mazesListView.setCellFactory(CheckBoxListCell.forListView(MazeListItem::checkedProperty));
             // Add the ListView to a TitledPane and add latter one to the Accordion
-            accMazeTitledPanes.add(new TitledPane(entryMazeCategory.getKey(), listView));
+            accMazeTitledPanes.add(new TitledPane(entryMazeCategory.getKey(), mazesListView));
         }
 
         // TODO: 21.03.2017 look up from preferences or stuff, and set at least one to true / selected
     }
 
-    private static class MyItem {
-        // TODO: 21.03.2017 zeug umbenennen
-        private final StringProperty mazeVariant = new SimpleStringProperty();
-        private final BooleanProperty inUse = new SimpleBooleanProperty();
+    private static class MazeListItem {
+        private final StringProperty mazeName = new SimpleStringProperty();
+        private final BooleanProperty checked = new SimpleBooleanProperty();
 
-        public MyItem(String mazeVariantName, boolean inUse) {
-            setMazeVariant(mazeVariantName);
-            setInUse(inUse);
+        MazeListItem(String mazeName, boolean checked) {
+            setMazeName(mazeName);
+            setChecked(checked);
         }
 
-        public final StringProperty mazeVariantProperty() {
-            return this.mazeVariant;
+        final StringProperty getMazeNameProperty() {
+            return this.mazeName;
         }
 
-        public String getMazeVariant() {
-            return this.mazeVariantProperty().get();
+        String getMazeName() {
+            return this.getMazeNameProperty().get();
         }
 
-        public final void setMazeVariant(final String mazeVariantName) {
-            this.mazeVariantProperty().set(mazeVariantName);
+        final void setMazeName(final String mazeVariantName) {
+            this.getMazeNameProperty().set(mazeVariantName);
         }
 
-        public final BooleanProperty inUseProperty() {
-            return this.inUse;
+        final BooleanProperty checkedProperty() {
+            return this.checked;
         }
 
-        public final boolean getInUse() {
-            return this.inUseProperty().get();
+        final boolean getChecked() {
+            return this.checkedProperty().get();
         }
 
-        public final void setInUse(final boolean inUse) {
-            this.inUseProperty().set(inUse);
+        final void setChecked(final boolean checked) {
+            this.checkedProperty().set(checked);
         }
 
         @Override
         public String toString() {
-            return getMazeVariant();
+            return getMazeName();
         }
     }
-
-    // TODO: 19.03.2017 finde alle maze generator klassen, eigene (pfad/referenz in ner xml oder ner klasse?) und dann fremde (i-wie per plugin? ^^) und füge sie korrekt in die comboBox ein
 }
