@@ -21,6 +21,8 @@ public class MazeCoordinator {
         return foo(null, getDefaultMazes());
     }
 
+    // FIXME: 21.03.2017 variablen deklarationen (in allen klassen) in die schleifen reinpacken wenn nicht außerhalb nötig
+
     private static TreeMap<String, TreeMap<String, Maze>> foo(@Nullable TreeMap<String, TreeMap<String, Maze>> mazeVariations, ArrayList<Maze> mazes) {
         if (mazeVariations == null) {
             mazeVariations = new TreeMap<>();

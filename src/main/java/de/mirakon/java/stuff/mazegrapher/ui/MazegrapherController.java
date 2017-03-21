@@ -65,8 +65,9 @@ public class MazegrapherController {
             for (Map.Entry<String, Maze> mazeCatEntry : mazeCategory.entrySet()) {
                 MyItem myItem = new MyItem(mazeCatEntry.getKey(), false);
 
-                myItem.inUseProperty().addListener((obs, wasOn, isNowOn) -> {
-                    System.out.println(myItem.getMazeVariant() + " changed on state from " + wasOn + " to " + isNowOn);
+                myItem.inUseProperty().addListener((obs, wasInUse, isNowInUse) -> {
+                    // TODO: 21.03.2017 was ist wohl sinnvoller, von hier eine liste updaten welche mazes inUse sind ODER bei zugriff die listViews durchiterieren und status prüfen
+                    System.out.println(myItem.getMazeVariant() + " changed on state from " + wasInUse + " to " + isNowInUse);
                 });
 
                 listView.getItems().add(myItem);
