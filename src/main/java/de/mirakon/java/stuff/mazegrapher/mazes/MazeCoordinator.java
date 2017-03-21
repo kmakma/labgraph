@@ -17,7 +17,7 @@ import java.util.TreeMap;
 
 public class MazeCoordinator {
 
-    public static TreeMap<String, TreeMap<String, Maze>> getDefaultMazeVariations() {
+    public static TreeMap<String, TreeMap<String, Maze>> getDefaultMazeMap() {
         return putMazesInMap(null, getDefaultMazes());
     }
 
