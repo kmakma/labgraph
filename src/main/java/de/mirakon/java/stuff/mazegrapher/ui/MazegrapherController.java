@@ -48,6 +48,8 @@ public class MazegrapherController {
 
         // FIXME: 21.03.2017 zeug umbenennen, größen (breiten, höhen) anpassen aaand stuff
 
+        // FIXME: 21.03.2017 variablen deklarationen (in allen klassen) in die schleifen reinpacken wenn nicht außerhalb nötig
+
         mazeVariations = MazeCoordinator.getDefaultMazeVariations();
 
         System.out.println(mazeVariations.size());
@@ -88,17 +90,13 @@ public class MazegrapherController {
     }
 
     private static class MyItem {
-        // TODO: 21.03.2017 umwege über this.etc nötig?
+        // TODO: 21.03.2017 zeug umbenennen
         private final StringProperty mazeVariant = new SimpleStringProperty();
         private final BooleanProperty inUse = new SimpleBooleanProperty();
 
-        public MyItem (String mazeVariantName, boolean inUse) {
+        public MyItem(String mazeVariantName, boolean inUse) {
             setMazeVariant(mazeVariantName);
             setInUse(inUse);
-        }
-
-        public final void setMazeVariant(final String mazeVariantName) {
-            this.mazeVariantProperty().set(mazeVariantName);
         }
 
         public final StringProperty mazeVariantProperty() {
@@ -109,8 +107,8 @@ public class MazegrapherController {
             return this.mazeVariantProperty().get();
         }
 
-        public final void setInUse(final boolean inUse) {
-            this.inUseProperty().set(inUse);
+        public final void setMazeVariant(final String mazeVariantName) {
+            this.mazeVariantProperty().set(mazeVariantName);
         }
 
         public final BooleanProperty inUseProperty() {
@@ -118,12 +116,16 @@ public class MazegrapherController {
         }
 
         public final boolean getInUse() {
-            return  this.inUseProperty().get();
+            return this.inUseProperty().get();
+        }
+
+        public final void setInUse(final boolean inUse) {
+            this.inUseProperty().set(inUse);
         }
 
         @Override
         public String toString() {
-            return  getMazeVariant();
+            return getMazeVariant();
         }
     }
 
