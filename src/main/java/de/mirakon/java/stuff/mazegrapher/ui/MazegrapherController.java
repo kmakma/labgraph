@@ -40,15 +40,15 @@ public class MazegrapherController {
     private Set<String> checkedMazes = Collections.synchronizedSet(new HashSet<>());
 
     public void initialize() {
-        // TODO: 21.03.2017 mazes not sorted by category needed
         fetchMazes();
         populateAccordion();
         createRandomMaze();
+        // TODO: 22.03.2017 hier kritische(re) exceptions abfangen
         // TODO: 19.03.2017 create maze depending on what's choosen, null maze abfangen
     }
 
     private void fetchMazes() {
-        // TODO: 21.03.2017 with plugin to more :P
+        // TODO: 21.03.2017 with plugin, do more :P
         mazes = MazeCoordinator.getDefaultMazeMap();
     }
 
@@ -104,6 +104,16 @@ public class MazegrapherController {
     }
 
     private void createRandomMaze() {
+        Maze maze = getRandomMazeInstance();
+        if (maze == null) {
+            // TODO: 22.03.2017 throw / meldung
+        }
+        int[] size = getRandomMazeSize();
+        // TODO: 21.03.2017 maze größen erstellen
+        // TODO: 21.03.2017 maze instanz besorgen und prüfen ob erster maze frei (dann entweder direkt als array oder maze abspeichern)
+    }
+
+    private Maze getRandomMazeInstance() {
         String[] checkedMazes = this.checkedMazes.toArray(new String[this.checkedMazes.size()]);
         String mazeName;
         if (checkedMazes.length > 0) {
@@ -115,12 +125,18 @@ public class MazegrapherController {
         }
         if (mazeName != null) {
             Maze maze = mazes.get(mazeName);
-            if(maze != null) {
+            if (maze != null) {
                 // TODO: 21.03.2017 call maze.newInstance stuff
             } else {
                 // TODO: 21.03.2017 error: konnte maze mit namen xy nicht finden
             }
         }
+        return null;
+    }
+
+    private int[] getRandomMazeSize() {
+        // TODO: 22.03.2017 präferenz holen, wenn nicht gefunden standardwerte von irgendwo holen
+        return new int[]{20, 20};
     }
 
     private static class MazeItem {
