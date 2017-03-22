@@ -10,13 +10,16 @@
 
 package de.mirakon.java.stuff.mazegrapher.mazes;
 
+import org.jetbrains.annotations.NotNull;
+
 public interface Maze {
 
 
     // TODO: 20.03.2017 getNewInstance mit argumenten hinzufügen
-
+    @NotNull
     String getMazeCategory();
 
+    @NotNull
     String getMazeName();
 
     // TODO: 20.03.2017 getMazePlugin might change

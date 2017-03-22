@@ -10,7 +10,7 @@
 
 package de.mirakon.java.stuff.mazegrapher.mazes;
 
-import com.sun.istack.internal.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.TreeMap;
@@ -27,7 +27,7 @@ public class MazeCoordinator {
         }
 
         for (Maze maze : mazes) {
-            if (maze.getMazeName() == null || "".equals(maze.getMazeName())) {
+            if ("".equals(maze.getMazeName())) {
                 // TODO: 21.03.2017 throw exception...somebody fucked up a maze ;)
                 System.err.println("Temporary Error Message: some idiot tried to smuggle a maze without a name into the system!");
             }
@@ -49,15 +49,16 @@ public class MazeCoordinator {
         return mazeTree;
     }
 
+    @SuppressWarnings("unused")
     @Deprecated
-    private static TreeMap<String, TreeMap<String, Maze>> putMazesInMapByCategory(@Nullable TreeMap<String, TreeMap<String, Maze>> mazeVariations, ArrayList<Maze> mazes) {
+    private static TreeMap<String, TreeMap<String, Maze>> putMazesInMapByCategory(TreeMap<String, TreeMap<String, Maze>> mazeVariations, ArrayList<Maze> mazes) {
         if (mazeVariations == null) {
             mazeVariations = new TreeMap<>();
         }
 
         TreeMap<String, Maze> mazeCategory;
         for (Maze maze : mazes) {
-            if (maze.getMazeCategory() == null || "".equals(maze.getMazeCategory()) || maze.getMazeName() == null || "".equals(maze.getMazeName())) {
+            if ("".equals(maze.getMazeCategory()) || "".equals(maze.getMazeName())) {
                 // TODO LATER: (deprecated) throw exception
                 throw new NullPointerException();
             }

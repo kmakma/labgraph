@@ -22,6 +22,7 @@ import javafx.scene.control.Accordion;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TitledPane;
 import javafx.scene.control.cell.CheckBoxListCell;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -86,7 +87,7 @@ public class MazegrapherController {
         TreeMap<String, ArrayList<String>> mazesByCategories = new TreeMap<>();
         for (Map.Entry<String, Maze> mazeEntry : mazes.entrySet()) {
             String mCategory = mazeEntry.getValue().getMazeCategory();
-            if (mCategory == null || "".equals(mCategory)) {
+            if ("".equals(mCategory)) {
                 // TODO: 21.03.2017 throw exception...maze without a category
                 System.err.println("Temporary Error Message: oh come on... where's the maze category?!");
             }
@@ -134,6 +135,7 @@ public class MazegrapherController {
         return null;
     }
 
+    @NotNull
     private int[] getRandomMazeSize() {
         // TODO: 22.03.2017 präferenz holen, wenn nicht gefunden standardwerte von irgendwo holen
         return new int[]{20, 20};

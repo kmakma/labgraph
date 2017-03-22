@@ -10,6 +10,8 @@
 
 package de.mirakon.java.stuff.mazegrapher.mazes;
 
+import org.jetbrains.annotations.NotNull;
+
 public class DummyMaze extends AbstractMaze {
 
     private static final String MAZE_NAME = "Dummy Maze";
@@ -19,11 +21,13 @@ public class DummyMaze extends AbstractMaze {
         super();
     }
 
+    @NotNull
     @Override
     public String getMazeCategory() {
         return MAZE_CATEGORY;
     }
 
+    @NotNull
     @Override
     public String getMazeName() {
         return MAZE_NAME;
