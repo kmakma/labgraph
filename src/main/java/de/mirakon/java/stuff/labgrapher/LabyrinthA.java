@@ -28,6 +28,7 @@ import java.util.concurrent.ThreadLocalRandom;
  * <p>
  * ACHTUNG: DIESE IMPLEMENTIERUNG IST SOWAS VON ÜBERHAUPT NICHT LAUFZEIT EFFIZIENT!!!
  */
+@Deprecated
 class LabyrinthA {
 
     Node[][] labyrinth;

@@ -23,6 +23,7 @@ package de.mirakon.java.stuff.labgrapher;
  * <p>
  * ACHTUNG: DIESE IMPLEMENTIERUNG IST SOWAS VON ÜBERHAUPT NICHT LAUFZEIT EFFIZIENT!!!
  */
+@Deprecated
 public class LabyrinthB extends LabyrinthC {
 
     private static final int NORTH = 0;

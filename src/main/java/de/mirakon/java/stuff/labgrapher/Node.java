@@ -17,7 +17,7 @@
  */
 
 package de.mirakon.java.stuff.labgrapher;
-
+@Deprecated
 class Node {
 
     private int posX;

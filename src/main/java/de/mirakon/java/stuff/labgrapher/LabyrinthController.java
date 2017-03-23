@@ -23,7 +23,7 @@ import javafx.scene.Node;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-
+@Deprecated
 public class LabyrinthController {
     @FXML
     private GridPane labA;

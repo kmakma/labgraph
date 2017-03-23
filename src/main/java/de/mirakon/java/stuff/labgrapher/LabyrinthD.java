@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 
 @SuppressWarnings("Duplicates")
+@Deprecated
 public class LabyrinthD extends LabyrinthA {
 
     private static final int NORTH = 0;
