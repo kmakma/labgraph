@@ -26,12 +26,12 @@ public class MainApp extends Application {
 
     public void start(Stage stage) throws Exception {
         ResourceBundle bundle = ResourceBundle.getBundle("Strings");
-        Parent mainLabParent = FXMLLoader.load(getClass().getResource("/layout/labyrinth.fxml"), bundle);
-//        Parent mainMazeParent = FXMLLoader.load(getClass().getResource("/layout/mazegrapher.fxml"), bundle);
+//        Parent mainLabParent = FXMLLoader.load(getClass().getResource("/layout/labyrinth.fxml"), bundle);
+        Parent mainMazeParent = FXMLLoader.load(getClass().getResource("/layout/mazegrapher.fxml"), bundle);
 
         stage.setTitle("MazeGrapher");
-        stage.setScene(new Scene(mainLabParent));
-//        stage.setScene(new Scene(mainMazeParent));
+//        stage.setScene(new Scene(mainLabParent));
+        stage.setScene(new Scene(mainMazeParent));
         // TODO: 17.03.2017 setMinHeight/~Width
         // stage.setMinHeight();
         // stage.setMinWidth();
