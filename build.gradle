@@ -9,7 +9,7 @@
  */
 
 group 'de.mirakon.java.stuff'
-version '0.2.01'
+version '0.2.01-SNAPSHOT'
 
 apply plugin: 'java'
 apply plugin: 'application'
