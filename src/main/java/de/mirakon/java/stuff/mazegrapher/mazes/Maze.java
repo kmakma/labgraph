@@ -15,7 +15,10 @@ import org.jetbrains.annotations.NotNull;
 public interface Maze {
 
 
-    // TODO: 20.03.2017 getNewInstance mit argumenten hinzufügen
+    // TODO: 20.03.2017 newInstance mit argumenten hinzufügen
+    @NotNull
+    Maze newInstance();
+
     @NotNull
     String getMazeCategory();
 

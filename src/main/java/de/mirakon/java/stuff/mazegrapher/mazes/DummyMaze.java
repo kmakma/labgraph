@@ -21,14 +21,20 @@ public class DummyMaze extends AbstractMaze {
         super();
     }
 
-    @NotNull
     @Override
+    @NotNull
+    public Maze newInstance() {
+        return new DummyMaze();
+    }
+
+    @Override
+    @NotNull
     public String getMazeCategory() {
         return MAZE_CATEGORY;
     }
 
-    @NotNull
     @Override
+    @NotNull
     public String getMazeName() {
         return MAZE_NAME;
     }
