@@ -10,6 +10,7 @@
 
 package de.mirakon.java.stuff.mazegrapher.ui;
 
+import de.mirakon.java.stuff.mazegrapher.mazes.DummyMaze;
 import de.mirakon.java.stuff.mazegrapher.mazes.Maze;
 import de.mirakon.java.stuff.mazegrapher.mazes.MazeCoordinator;
 import javafx.beans.property.BooleanProperty;
@@ -28,24 +29,48 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.prefs.BackingStoreException;
+import java.util.prefs.Preferences;
 
 public class MazegrapherController {
+
+    public static final String CHECKEDMAZES_PREF_NODE_PATH = generateExtraPreferencesNodePath("checkedmazes");
 
     @FXML
     private Accordion accordionMazes;
 
+    private ResourceBundle strings;
     private TreeMap<String, Maze> mazes;
     private Set<String> checkedMazes = Collections.synchronizedSet(new HashSet<>());
+    private Maze currentMaze;
+
+    private static String generateExtraPreferencesNodePath(@NotNull String extra) {
+        String className = MazegrapherController.class.getName();
+        int endIndex = className.lastIndexOf('.');
+        String packageName = className.substring(0, endIndex).replace('.', '/');
+        return String.format("/%s/%s", packageName, extra);
+    }
+
 
     public void initialize() {
+        loadStringResources();
         fetchMazes();
         populateAccordion();
-        createRandomMaze();
+        currentMaze = createRandomMaze();
         // TODO: 22.03.2017 hier kritische(re) exceptions abfangen
         // TODO: 19.03.2017 create maze depending on what's choosen, null maze abfangen
+
+    }
+
+    /**
+     * Loads the Strings.properties (or Strings_xx.properties) ResourceBundle containing all location dependent strings, with current default Locale
+     */
+    private void loadStringResources() {
+        strings = ResourceBundle.getBundle("Strings");
     }
 
     private void fetchMazes() {
@@ -79,8 +104,52 @@ public class MazegrapherController {
             // Add the ListView to a TitledPane and add latter one to the Accordion
             accMazeTitledPanes.add(new TitledPane(mazeCategory.getKey(), mazeItemListView));
         }
+        // TODO: 08.04.2017 sicherstellen dass accordion mindestens ein kind hat (emergency maze?)
+        // TODO AS NEXT: 07.04.2017 look up from preferences or stuff, and set at least one to true / selected (tu in methode die boolean zurückgibt)
+        checkMazes();
+    }
 
-        // TODO: 21.03.2017 look up from preferences or stuff, and set at least one to true / selected (tu in methode die boolean zurückgibt)
+    private void checkMazes() {
+        // TODO: 08.04.2017 ggf preferences als feld und besorgung seperat in methode
+        Preferences checkedMazesPrefs = Preferences.userRoot().node(CHECKEDMAZES_PREF_NODE_PATH);
+
+        String[] checkedMazes;
+        try {
+            checkedMazes = checkedMazesPrefs.keys();
+        } catch (BackingStoreException e) {
+            e.printStackTrace();
+            // TODO: 08.04.2017 throw new PreferencesException(...)
+            checkedMazes = new String[0];
+        }
+
+        if (checkedMazes.length > 0) {
+            // Check mazes from preferences (from last time)
+            for (String checkedMaze : checkedMazes) {
+                ObservableList<TitledPane> titledPanes = accordionMazes.getPanes();
+                for (TitledPane titledPane : titledPanes) {
+                    if (titledPane.getText().equals(checkedMazesPrefs.get(checkedMaze, null))) {
+                        @SuppressWarnings("unchecked")
+                        ObservableList<MazeItem> mazeItems = ((ListView<MazeItem>) titledPane.getContent()).getItems();
+                        for (MazeItem mazeItem : mazeItems) {
+                            if (mazeItem.getMazeName().equals(checkedMaze)) {
+                                mazeItem.setChecked(true);
+                                break;
+                            }
+                        }
+                        break;
+                    }
+                }
+            }
+        } else {
+            // Check first maze
+            TitledPane firstTitledPane = accordionMazes.getPanes().get(0);
+            System.out.println();
+            @SuppressWarnings("unchecked")
+            ListView<MazeItem> listView = (ListView<MazeItem>) firstTitledPane.getContent();
+            MazeItem firstMazeItem = listView.getItems().get(0);
+            firstMazeItem.setChecked(true);
+        }
+        // TODO: 08.04.2017 beim beenden (des programms) aktuelle checkedMazesPrefs mit checkedMazes überschreiben
     }
 
     private TreeMap<String, ArrayList<String>> getMazeNamesByCategory() {
@@ -104,7 +173,8 @@ public class MazegrapherController {
         return mazesByCategories;
     }
 
-    private void createRandomMaze() {
+    @NotNull
+    private Maze createRandomMaze() {
         Maze maze = getRandomMazeInstance();
         if (maze == null) {
             // TODO: 22.03.2017 throw / meldung
@@ -112,8 +182,10 @@ public class MazegrapherController {
         int[] size = getRandomMazeSize();
         // TODO: 21.03.2017 maze größen erstellen
         // TODO: 21.03.2017 maze instanz besorgen und prüfen ob erster maze frei (dann entweder direkt als array oder maze abspeichern)
+        return maze.newInstance();
     }
 
+    @NotNull
     private Maze getRandomMazeInstance() {
         String[] checkedMazes = this.checkedMazes.toArray(new String[this.checkedMazes.size()]);
         String mazeName;
@@ -132,7 +204,8 @@ public class MazegrapherController {
                 // TODO: 21.03.2017 error: konnte maze mit namen xy nicht finden
             }
         }
-        return null;
+//        return null;
+        return new DummyMaze();
     }
 
     @NotNull
