@@ -32,6 +32,8 @@ public class MazeCoordinator {
                 System.err.println("Temporary Error Message: some idiot tried to smuggle a maze without a name into the system!");
             }
 
+            // TODO: 07.04.2017 wenn maze umbenannt wird, dann benenne auch den schon eingefügten maze um
+            // TODO: 08.04.2017 gebe jedem maze das plugin als suffix
             if(mazeTree.putIfAbsent(maze.getMazeName(), maze) != null) {
                 String newMazeName = maze.getMazePlugin();
                 if (newMazeName == null || "".equals(newMazeName)) {
