@@ -26,7 +26,10 @@ public class MainApp extends Application {
 
     public void start(Stage stage) throws Exception {
         ResourceBundle bundle = ResourceBundle.getBundle("Strings");
-        Parent mainMazeParent = FXMLLoader.load(getClass().getResource("/layout/mazegrapher.fxml"), bundle);
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/layout/mazegrapher.fxml"), bundle);
+        Parent mainMazeParent = loader.load();
+        MazegrapherController controller = loader.getController();
+        controller.setStageListeners(stage);
 
         stage.setTitle("MazeGrapher");
         stage.setScene(new Scene(mainMazeParent));

@@ -23,6 +23,7 @@ import javafx.scene.control.Accordion;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TitledPane;
 import javafx.scene.control.cell.CheckBoxListCell;
+import javafx.stage.Stage;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -55,6 +56,10 @@ public class MazegrapherController {
         return String.format("/%s/%s", packageName, extra);
     }
 
+    public void setStageListeners(Stage stage) {
+        // http://stackoverflow.com/questions/26619566/javafx-stage-close-handler
+        // TODO: 08.04.2017 onClose listener zum speichern von preferences u.ä. (mit setOnCloseRequest??)
+    }
 
     public void initialize() {
         loadStringResources();
