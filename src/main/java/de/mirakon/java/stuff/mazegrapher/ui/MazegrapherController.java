@@ -1,11 +1,19 @@
 /*
  * Copyright 2017 Michael
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
+ * documentation files (the "Software"), to deal in the Software without restriction, including without limitation
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and
+ * to permit persons to whom the Software is furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or substantial portions of
+ * the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+ * THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF
+ * CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+ * IN THE SOFTWARE.
  */
 
 package de.mirakon.java.stuff.mazegrapher.ui;
@@ -19,23 +27,22 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.Accordion;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TitledPane;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxListCell;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.ResourceBundle;
-import java.util.Set;
-import java.util.TreeMap;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
+
+import static javafx.scene.control.Alert.AlertType;
+
 
 public class MazegrapherController {
 
@@ -45,9 +52,13 @@ public class MazegrapherController {
     private Accordion accordionMazes;
 
     private ResourceBundle strings;
+
+    private Preferences checkedMazesPrefs;
     private TreeMap<String, Maze> mazes;
+
     private Set<String> checkedMazes = Collections.synchronizedSet(new HashSet<>());
     private Maze currentMaze;
+
 
     private static String generateExtraPreferencesNodePath(@NotNull String extra) {
         String className = MazegrapherController.class.getName();
@@ -63,6 +74,7 @@ public class MazegrapherController {
 
     public void initialize() {
         loadStringResources();
+        fetchPreferences();
         fetchMazes();
         populateAccordion();
         currentMaze = createRandomMaze();
@@ -72,10 +84,15 @@ public class MazegrapherController {
     }
 
     /**
-     * Loads the Strings.properties (or Strings_xx.properties) ResourceBundle containing all location dependent strings, with current default Locale
+     * Loads the Strings.properties (or Strings_xx.properties) ResourceBundle containing all location dependent
+     * strings, with current default Locale
      */
     private void loadStringResources() {
         strings = ResourceBundle.getBundle("Strings");
+    }
+
+    private void fetchPreferences() {
+        checkedMazesPrefs = Preferences.userRoot().node(CHECKEDMAZES_PREF_NODE_PATH);
     }
 
     private void fetchMazes() {
@@ -110,20 +127,16 @@ public class MazegrapherController {
             accMazeTitledPanes.add(new TitledPane(mazeCategory.getKey(), mazeItemListView));
         }
         // TODO: 08.04.2017 sicherstellen dass accordion mindestens ein kind hat (emergency maze?)
-        // TODO AS NEXT: 07.04.2017 look up from preferences or stuff, and set at least one to true / selected (tu in methode die boolean zurückgibt)
         checkMazes();
     }
 
     private void checkMazes() {
-        // TODO: 08.04.2017 ggf preferences als feld und besorgung seperat in methode
-        Preferences checkedMazesPrefs = Preferences.userRoot().node(CHECKEDMAZES_PREF_NODE_PATH);
-
         String[] checkedMazes;
         try {
             checkedMazes = checkedMazesPrefs.keys();
         } catch (BackingStoreException e) {
-            e.printStackTrace();
-            // TODO: 08.04.2017 throw new PreferencesException(...)
+            showAlertWithStacktrace(AlertType.WARNING, strings.getString("warning"), strings.getString
+                    ("warningPrefHeaderCheckMazes"), strings.getString("warningPrefContentCheckedMazes"), e);
             checkedMazes = new String[0];
         }
 
@@ -186,7 +199,8 @@ public class MazegrapherController {
         }
         int[] size = getRandomMazeSize();
         // TODO: 21.03.2017 maze größen erstellen
-        // TODO: 21.03.2017 maze instanz besorgen und prüfen ob erster maze frei (dann entweder direkt als array oder maze abspeichern)
+        // TODO: 21.03.2017 maze instanz besorgen und prüfen ob erster maze frei (dann entweder direkt als array oder
+        // maze abspeichern)
         return maze.newInstance();
     }
 
@@ -217,6 +231,38 @@ public class MazegrapherController {
     private int[] getRandomMazeSize() {
         // TODO: 22.03.2017 präferenz holen, wenn nicht gefunden standardwerte von irgendwo holen
         return new int[]{20, 20};
+    }
+
+
+    private void showAlertWithStacktrace(AlertType alertType, String title, String headerText, String contentText, Exception exception) {
+        Alert alert = new Alert(alertType);
+        alert.setTitle(title);
+        alert.setHeaderText(headerText);
+        alert.setContentText(contentText);
+        // Expandable Content
+        if (exception != null) {
+            // Stacktrace String
+            StringWriter stringWriter = new StringWriter();
+            PrintWriter printWriter = new PrintWriter(stringWriter);
+            exception.printStackTrace(printWriter);
+            String stackTrace = stringWriter.toString();
+            // Expandable Content
+            Label label = new Label("Exception stacktrace:");
+            TextArea textArea = new TextArea(stackTrace);
+
+            textArea.setEditable(false);
+            textArea.setWrapText(true);
+            textArea.setMaxHeight(Double.MAX_VALUE);
+            textArea.setMaxWidth(Double.MAX_VALUE);
+            VBox.setVgrow(textArea, Priority.ALWAYS);
+
+            VBox expContent = new VBox();
+            expContent.setMaxWidth(Double.MAX_VALUE);
+            expContent.getChildren().addAll(label, textArea);
+
+            alert.getDialogPane().setExpandableContent(expContent);
+        }
+        alert.showAndWait();
     }
 
     private static class MazeItem {
