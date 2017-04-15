@@ -130,6 +130,7 @@ public class MazegrapherController {
         checkMazes();
     }
 
+    @SuppressWarnings("unchecked")
     private void checkMazes() {
         String[] checkedMazes;
         try {
@@ -141,12 +142,24 @@ public class MazegrapherController {
         }
 
         if (checkedMazes.length > 0) {
+
+            // TODO do some stream magick instead of POJ
+            for (String checkedMaze : checkedMazes) {
+                accordionMazes.getPanes().stream()
+                        .filter(titledPane -> titledPane.getText().equals(checkedMazesPrefs.get(checkedMaze, null)))
+                        .limit(1)
+                        .flatMap(titledPane -> ((ListView<MazeItem>) titledPane.getContent()).getItems().stream())
+                        .filter(mazeItem -> mazeItem.getMazeName().equals(checkedMaze))
+                        .limit(1)
+                        .forEach(mazeItem -> mazeItem.setChecked(true));
+            }
+
             // Check mazes from preferences (from last time)
+            /*
             for (String checkedMaze : checkedMazes) {
                 ObservableList<TitledPane> titledPanes = accordionMazes.getPanes();
                 for (TitledPane titledPane : titledPanes) {
                     if (titledPane.getText().equals(checkedMazesPrefs.get(checkedMaze, null))) {
-                        @SuppressWarnings("unchecked")
                         ObservableList<MazeItem> mazeItems = ((ListView<MazeItem>) titledPane.getContent()).getItems();
                         for (MazeItem mazeItem : mazeItems) {
                             if (mazeItem.getMazeName().equals(checkedMaze)) {
@@ -158,11 +171,10 @@ public class MazegrapherController {
                     }
                 }
             }
+             */
         } else {
             // Check first maze
             TitledPane firstTitledPane = accordionMazes.getPanes().get(0);
-            System.out.println();
-            @SuppressWarnings("unchecked")
             ListView<MazeItem> listView = (ListView<MazeItem>) firstTitledPane.getContent();
             MazeItem firstMazeItem = listView.getItems().get(0);
             firstMazeItem.setChecked(true);
@@ -194,8 +206,8 @@ public class MazegrapherController {
     @NotNull
     private Maze createRandomMaze() {
         Maze maze = getRandomMazeInstance();
+        // TODO: 22.03.2017 throw / meldung
         if (maze == null) {
-            // TODO: 22.03.2017 throw / meldung
         }
         int[] size = getRandomMazeSize();
         // TODO: 21.03.2017 maze größen erstellen
@@ -267,7 +279,7 @@ public class MazegrapherController {
 
     private static class MazeItem {
         private final StringProperty mazeName = new SimpleStringProperty();
-        private final BooleanProperty checked = new SimpleBooleanProperty();
+        private final BooleanProperty isChecked = new SimpleBooleanProperty();
 
         MazeItem(String mazeName, boolean checked) {
             setMazeName(mazeName);
@@ -287,15 +299,15 @@ public class MazegrapherController {
         }
 
         final BooleanProperty checkedProperty() {
-            return this.checked;
+            return this.isChecked;
         }
 
         final boolean getChecked() {
             return this.checkedProperty().get();
         }
 
-        final void setChecked(final boolean checked) {
-            this.checkedProperty().set(checked);
+        final void setChecked(final boolean isChecked) {
+            this.checkedProperty().set(isChecked);
         }
 
         @Override
