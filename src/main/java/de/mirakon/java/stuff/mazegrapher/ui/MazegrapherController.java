@@ -21,6 +21,7 @@ package de.mirakon.java.stuff.mazegrapher.ui;
 import de.mirakon.java.stuff.mazegrapher.mazes.DummyMaze;
 import de.mirakon.java.stuff.mazegrapher.mazes.Maze;
 import de.mirakon.java.stuff.mazegrapher.mazes.MazeCoordinator;
+import de.mirakon.java.stuff.mazegrapher.mazes.MissingMazeArgumentException;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -73,12 +74,15 @@ public class MazegrapherController {
     }
 
     public void initialize() {
-        loadStringResources();
-        fetchPreferences();
-        fetchMazes();
-        populateAccordion();
-        currentMaze = createRandomMaze();
-        // TODO: 22.03.2017 hier kritische(re) exceptions abfangen
+        try {
+            loadStringResources();
+            fetchPreferences();
+            fetchMazes();
+            populateAccordion();
+            currentMaze = createRandomMaze();
+        } catch (MissingMazeArgumentException | IllegalStateException e) {
+            showErrorAlert(strings.getString("errorInitialization"), e);
+        }
         // TODO: 19.03.2017 create maze depending on what's choosen, null maze abfangen
 
     }
@@ -95,7 +99,7 @@ public class MazegrapherController {
         checkedMazesPrefs = Preferences.userRoot().node(CHECKEDMAZES_PREF_NODE_PATH);
     }
 
-    private void fetchMazes() {
+    private void fetchMazes() throws MissingMazeArgumentException, IllegalStateException {
         // TODO: 21.03.2017 with plugin, do more :P
         mazes = MazeCoordinator.getDefaultMazeMap();
     }
@@ -234,7 +238,8 @@ public class MazegrapherController {
     }
 
 
-    private void showAlertWithStacktrace(AlertType alertType, String title, String headerText, String contentText, Exception exception) {
+    private void showAlertWithStacktrace(AlertType alertType, String title, String headerText, String contentText,
+                                         Exception exception) {
         Alert alert = new Alert(alertType);
         alert.setTitle(title);
         alert.setHeaderText(headerText);
@@ -262,7 +267,49 @@ public class MazegrapherController {
 
             alert.getDialogPane().setExpandableContent(expContent);
         }
-        alert.showAndWait();
+        alert.show();
+    }
+
+    private void showErrorAlert(String headerText, @NotNull Exception exception) {
+        // TODO: 22.04.2017 ALS NÄCHSTES DIESEN SHOWERRORALERT
+        String message = exception.getMessage();
+        String messageKey = message.split("-", 2)[0];
+
+        // TODO: 22.04.2017 statt try/catch mit ifs alle bekannten möglichkeiten abfragen
+        String contentText;
+        try {
+            contentText = strings.getString(messageKey);
+        } catch (MissingResourceException e) {
+            contentText = message;
+        }
+
+        Alert alert = new Alert(AlertType.ERROR);
+        alert.setTitle(strings.getString("error"));
+        alert.setHeaderText(headerText);
+        alert.setContentText(contentText);
+        // Expandable Content
+        // Stacktrace String
+        StringWriter stringWriter = new StringWriter();
+        PrintWriter printWriter = new PrintWriter(stringWriter);
+        exception.printStackTrace(printWriter);
+        String stackTrace = stringWriter.toString();
+        // Expandable Content
+        Label label = new Label("Exception stacktrace:");
+        TextArea textArea = new TextArea(stackTrace);
+
+        textArea.setEditable(false);
+        textArea.setWrapText(true);
+        textArea.setMaxHeight(Double.MAX_VALUE);
+        textArea.setMaxWidth(Double.MAX_VALUE);
+        VBox.setVgrow(textArea, Priority.ALWAYS);
+
+        VBox expContent = new VBox();
+        expContent.setMaxWidth(Double.MAX_VALUE);
+        expContent.getChildren().addAll(label, textArea);
+
+        alert.getDialogPane().setExpandableContent(expContent);
+
+        alert.show();
     }
 
     private static class MazeItem {

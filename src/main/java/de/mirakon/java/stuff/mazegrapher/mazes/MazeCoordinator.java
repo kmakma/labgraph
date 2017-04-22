@@ -25,39 +25,34 @@ import java.util.TreeMap;
 
 public class MazeCoordinator {
 
-    public static TreeMap<String, Maze> getDefaultMazeMap() {
+    public static TreeMap<String, Maze> getDefaultMazeMap() throws MissingMazeArgumentException, IllegalStateException {
         return putMazesInMap(null, getDefaultMazes());
     }
 
     private static TreeMap<String, Maze> putMazesInMap(@Nullable TreeMap<String, Maze> mazeTree, ArrayList<Maze>
-            mazes) {
+            mazes) throws MissingMazeArgumentException, IllegalStateException {
         if (mazeTree == null) {
             mazeTree = new TreeMap<>();
         }
-
+        // FIXME: 22.04.2017 seperate Strings file for mazeCoordinator maybe
         for (Maze maze : mazes) {
             if ("".equals(maze.getMazeName())) {
-                // TODO: 21.03.2017 throw critical exception
-                System.err.println("Temporary Error Message: some idiot tried to smuggle a maze without a name into " +
-                        "the system!");
+                throw new MissingMazeArgumentException("errorMazeMissingName-Maze without a name!");
             }
             if ("".equals(maze.getMazeCategory())) {
-                // TODO: 22.04.2017 throw critical exception
-                System.err.println("Temporary Error Message: some idiot tried to smuggle a maze without a category " +
-                        "into the system!");
+                throw new MissingMazeArgumentException("errorMazeMissingCategory-Maze \"" + maze.getMazeName() + "\" " +
+                        "without a category!");
             }
-            if ("".equals(maze.getMazePlugin())) {
-                // TODO: 22.04.2017 throw critical exception
-                System.err.println("Temporary Error Message: some idiot tried to smuggle a maze without a plugin name" +
-                        " into the system!");
-            }
-
-            // TODO: 22.04.2017 use localized Strings for names
+            // TODO: 22.04.2017 use localized Strings for names (provided by mazes)
             String newMazeName = String.format("%s (%s)", maze.getMazeName(), maze.getMazePlugin());
-
+            if ("".equals(maze.getMazePlugin())) {
+                throw new MissingMazeArgumentException("errorMazeMissingPlugin-Maze \"" + newMazeName + "\" without a" +
+                        " plugin name!");
+            }
             if (mazeTree.putIfAbsent(newMazeName, maze) != null) {
-                // TODO: 22.04.2017 throw critical exception
-                System.err.println("Temporary Error Message: maze with duplicate name and duplicate plugin name");
+                String duplicateMaze = String.format("name: %s; category: %s; plugin: %s", maze.getMazeName(), maze
+                        .getMazeCategory(), maze.getMazePlugin());
+                throw new IllegalStateException("errorMazeDuplicate-Duplicate Maze: " + duplicateMaze);
             }
         }
         return mazeTree;
