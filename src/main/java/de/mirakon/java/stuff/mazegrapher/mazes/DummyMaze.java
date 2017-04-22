@@ -40,7 +40,8 @@ public class DummyMaze extends AbstractMaze {
     }
 
     @Override
+    @NotNull
     public String getMazePlugin() {
-        return null;
+        return "default";
     }
 }

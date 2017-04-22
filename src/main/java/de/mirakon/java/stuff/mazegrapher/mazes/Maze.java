@@ -25,6 +25,6 @@ public interface Maze {
     @NotNull
     String getMazeName();
 
-    // TODO: 20.03.2017 getMazePlugin might change
+    @NotNull
     String getMazePlugin();
 }
