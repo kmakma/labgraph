@@ -130,6 +130,15 @@ public class MazegrapherController {
         checkMazes();
     }
 
+    private TreeMap<String, ArrayList<String>> getMazeNamesByCategory() {
+        TreeMap<String, ArrayList<String>> mazesByCategories = new TreeMap<>();
+        for (Map.Entry<String, Maze> mazeEntry : mazes.entrySet()) {
+            String mCategory = mazeEntry.getValue().getMazeCategory();
+            mazesByCategories.computeIfAbsent(mCategory, k -> new ArrayList<>()).add(mazeEntry.getKey());
+        }
+        return mazesByCategories;
+    }
+
     @SuppressWarnings("unchecked")
     private void checkMazes() {
         String[] checkedMazes;
@@ -180,27 +189,6 @@ public class MazegrapherController {
             firstMazeItem.setChecked(true);
         }
         // TODO: 08.04.2017 beim beenden (des programms) aktuelle checkedMazesPrefs mit checkedMazes überschreiben
-    }
-
-    private TreeMap<String, ArrayList<String>> getMazeNamesByCategory() {
-        TreeMap<String, ArrayList<String>> mazesByCategories = new TreeMap<>();
-        for (Map.Entry<String, Maze> mazeEntry : mazes.entrySet()) {
-            String mCategory = mazeEntry.getValue().getMazeCategory();
-            if ("".equals(mCategory)) {
-                // TODO: 21.03.2017 throw exception...maze without a category
-                System.err.println("Temporary Error Message: oh come on... where's the maze category?!");
-            }
-
-            ArrayList<String> categoryMazes = mazesByCategories.get(mCategory);
-            if (categoryMazes == null) {
-                categoryMazes = new ArrayList<>();
-                categoryMazes.add(mazeEntry.getKey());
-                mazesByCategories.put(mCategory, categoryMazes);
-            } else {
-                categoryMazes.add(mazeEntry.getKey());
-            }
-        }
-        return mazesByCategories;
     }
 
     @NotNull
