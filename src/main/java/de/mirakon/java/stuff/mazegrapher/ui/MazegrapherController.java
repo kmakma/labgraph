@@ -28,12 +28,14 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxListCell;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -81,7 +83,7 @@ public class MazegrapherController {
             populateAccordion();
             currentMaze = createRandomMaze();
         } catch (MissingMazeArgumentException | IllegalStateException e) {
-            showErrorAlert(strings.getString("errorInitialization"), e);
+            showErrorAlert(strings.getString("error"), strings.getString("errorInitialization"), e.getMessage(), e);
         }
         // TODO: 19.03.2017 create maze depending on what's choosen, null maze abfangen
 
@@ -149,8 +151,8 @@ public class MazegrapherController {
         try {
             checkedMazes = checkedMazesPrefs.keys();
         } catch (BackingStoreException e) {
-            showAlertWithStacktrace(AlertType.WARNING, strings.getString("warning"), strings.getString
-                    ("warningPrefHeaderCheckMazes"), strings.getString("warningPrefContentCheckedMazes"), e);
+            getAlert(AlertType.WARNING, strings.getString("warning"), strings.getString
+                    ("warningPrefHeaderCheckMazes"), strings.getString("warningPrefContentCheckedMazes"), e).show();
             checkedMazes = new String[0];
         }
 
@@ -237,57 +239,28 @@ public class MazegrapherController {
         return new int[]{20, 20};
     }
 
-
-    private void showAlertWithStacktrace(AlertType alertType, String title, String headerText, String contentText,
-                                         Exception exception) {
+    @NotNull
+    private Alert getAlert(@NotNull AlertType alertType, @Nullable String title, @Nullable String headerText,
+                           @Nullable String contentText, @Nullable Exception exception) {
         Alert alert = new Alert(alertType);
         alert.setTitle(title);
         alert.setHeaderText(headerText);
         alert.setContentText(contentText);
-        // Expandable Content
         if (exception != null) {
-            // Stacktrace String
-            StringWriter stringWriter = new StringWriter();
-            PrintWriter printWriter = new PrintWriter(stringWriter);
-            exception.printStackTrace(printWriter);
-            String stackTrace = stringWriter.toString();
-            // Expandable Content
-            Label label = new Label("Exception stacktrace:");
-            TextArea textArea = new TextArea(stackTrace);
-
-            textArea.setEditable(false);
-            textArea.setWrapText(true);
-            textArea.setMaxHeight(Double.MAX_VALUE);
-            textArea.setMaxWidth(Double.MAX_VALUE);
-            VBox.setVgrow(textArea, Priority.ALWAYS);
-
-            VBox expContent = new VBox();
-            expContent.setMaxWidth(Double.MAX_VALUE);
-            expContent.getChildren().addAll(label, textArea);
-
-            alert.getDialogPane().setExpandableContent(expContent);
+            alert.getDialogPane().setExpandableContent(createExpandableContent(exception));
         }
-        alert.show();
+        return alert;
     }
 
-    private void showErrorAlert(String headerText, @NotNull Exception exception) {
-        // TODO: 22.04.2017 ALS NÄCHSTES DIESEN SHOWERRORALERT
-        String message = exception.getMessage();
-        String messageKey = message.split("-", 2)[0];
+    private void showErrorAlert(@Nullable String title, @Nullable String headerText, @Nullable String contentText,
+                                @Nullable Exception exception) {
+        Alert alert = getAlert(AlertType.ERROR, title, headerText, contentText, exception);
+        // TODO: 24.04.2017 NEXT Customize Error Alert Buttons
+        alert.showAndWait();
+    }
 
-        // TODO: 22.04.2017 statt try/catch mit ifs alle bekannten möglichkeiten abfragen
-        String contentText;
-        try {
-            contentText = strings.getString(messageKey);
-        } catch (MissingResourceException e) {
-            contentText = message;
-        }
-
-        Alert alert = new Alert(AlertType.ERROR);
-        alert.setTitle(strings.getString("error"));
-        alert.setHeaderText(headerText);
-        alert.setContentText(contentText);
-        // Expandable Content
+    @NotNull
+    private Node createExpandableContent(@NotNull Exception exception) {
         // Stacktrace String
         StringWriter stringWriter = new StringWriter();
         PrintWriter printWriter = new PrintWriter(stringWriter);
@@ -307,9 +280,7 @@ public class MazegrapherController {
         expContent.setMaxWidth(Double.MAX_VALUE);
         expContent.getChildren().addAll(label, textArea);
 
-        alert.getDialogPane().setExpandableContent(expContent);
-
-        alert.show();
+        return expContent;
     }
 
     private static class MazeItem {

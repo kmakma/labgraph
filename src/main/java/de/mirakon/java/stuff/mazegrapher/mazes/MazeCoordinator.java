@@ -34,25 +34,24 @@ public class MazeCoordinator {
         if (mazeTree == null) {
             mazeTree = new TreeMap<>();
         }
-        // FIXME: 22.04.2017 seperate Strings file for mazeCoordinator maybe
         for (Maze maze : mazes) {
             if ("".equals(maze.getMazeName())) {
-                throw new MissingMazeArgumentException("errorMazeMissingName-Maze without a name!");
+                throw new MissingMazeArgumentException(Strings.getString("errorMazeMissingName"));
             }
             if ("".equals(maze.getMazeCategory())) {
-                throw new MissingMazeArgumentException("errorMazeMissingCategory-Maze \"" + maze.getMazeName() + "\" " +
-                        "without a category!");
+                throw new MissingMazeArgumentException(Strings.getString("errorMazeMissingCategory") + " " + maze
+                        .getMazeName());
             }
             // TODO: 22.04.2017 use localized Strings for names (provided by mazes)
             String newMazeName = String.format("%s (%s)", maze.getMazeName(), maze.getMazePlugin());
             if ("".equals(maze.getMazePlugin())) {
-                throw new MissingMazeArgumentException("errorMazeMissingPlugin-Maze \"" + newMazeName + "\" without a" +
-                        " plugin name!");
+                throw new MissingMazeArgumentException(Strings.getString("errorMazeMissingPlugin") + " " +
+                        newMazeName);
             }
             if (mazeTree.putIfAbsent(newMazeName, maze) != null) {
-                String duplicateMaze = String.format("name: %s; category: %s; plugin: %s", maze.getMazeName(), maze
+                String duplicateMaze = String.format(" name: %s; category: %s; plugin: %s", maze.getMazeName(), maze
                         .getMazeCategory(), maze.getMazePlugin());
-                throw new IllegalStateException("errorMazeDuplicate-Duplicate Maze: " + duplicateMaze);
+                throw new IllegalStateException(Strings.getString("errorMazeDuplicate") + duplicateMaze);
             }
         }
         return mazeTree;

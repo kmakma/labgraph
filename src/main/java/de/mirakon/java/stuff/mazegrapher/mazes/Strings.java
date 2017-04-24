@@ -10,26 +10,27 @@
 
 package de.mirakon.java.stuff.mazegrapher.mazes;
 
-/**
- * Thrown to indicate that a method returned an illegal or inappropriate argument.
- */
-public class MissingMazeArgumentException extends RuntimeException {
+import org.jetbrains.annotations.NotNull;
 
-    private static final long serialVersionUID = 8676434374089925605L;
+import java.util.ResourceBundle;
 
-    public MissingMazeArgumentException() {
-        super();
+public class Strings {
+
+    private static ResourceBundle strings;
+
+    @NotNull
+    public static String getString(@NotNull String key) {
+        if(strings==null) {
+            loadStringResources();
+        }
+        return strings.getString(key);
     }
 
-    public MissingMazeArgumentException(String message) {
-        super(message);
-    }
-
-    public MissingMazeArgumentException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    public MissingMazeArgumentException(Throwable cause) {
-        super(cause);
+    /**
+     * Loads the MazesStrings.properties (or Strings_xx.properties) ResourceBundle containing all location dependent
+     * strings, with current default Locale
+     */
+    private static void loadStringResources() {
+        strings = ResourceBundle.getBundle("MazesStrings");
     }
 }
