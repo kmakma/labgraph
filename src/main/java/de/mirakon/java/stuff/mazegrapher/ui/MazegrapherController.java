@@ -73,9 +73,25 @@ public class MazegrapherController {
         return String.format("/%s/%s", packageName, extra);
     }
 
-    public void setStageListeners(Stage stage) {
-        // http://stackoverflow.com/questions/26619566/javafx-stage-close-handler
-        // TODO: 08.04.2017 onClose listener zum speichern von preferences u.ä. (mit setOnCloseRequest??)
+    void setStageListeners(@NotNull Stage stage) {
+        stage.setOnCloseRequest(event -> {
+            saveCheckedMazes();
+        });
+    }
+
+    private void saveCheckedMazes() {
+        try {
+            checkedMazesPrefs.clear();
+        } catch (BackingStoreException e) {
+            getAlert(AlertType.WARNING, strings.getString("warning"), null, strings.getString
+                    ("warningPrefContentClearCheckedMazes"), e).show();
+        }
+        for (String mazeName : checkedMazes) {
+            Maze checkedMaze = mazes.get(mazeName);
+            if (checkedMaze != null) {
+                checkedMazesPrefs.put(mazeName, checkedMaze.getMazeCategory());
+            }
+        }
     }
 
     public void initialize() {
@@ -155,7 +171,9 @@ public class MazegrapherController {
             checkedMazes = checkedMazesPrefs.keys();
         } catch (BackingStoreException e) {
             getAlert(AlertType.WARNING, strings.getString("warning"), strings.getString
-                    ("warningPrefHeaderCheckMazes"), strings.getString("warningPrefContentCheckedMazes"), e).show();
+                            ("warningPrefHeaderLoadCheckedMazes"), strings.getString
+                            ("warningPrefContentLoadCheckedMazes"),
+                    e).show();
             checkedMazes = new String[0];
         }
 
@@ -264,7 +282,7 @@ public class MazegrapherController {
         alert.getButtonTypes().setAll(settingsButton, exitButton);
 
         Optional<ButtonType> result = alert.showAndWait();
-        if (result.isPresent() && result.get() == settingsButton) {
+        if (result.isPresent() && (result.get() == settingsButton)) {
             // TODO: 01.05.2017 open settings
         } else {
             Platform.exit();
