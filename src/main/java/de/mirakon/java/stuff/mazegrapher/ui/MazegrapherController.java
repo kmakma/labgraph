@@ -35,6 +35,7 @@ import javafx.scene.control.cell.CheckBoxListCell;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -134,7 +135,7 @@ public class MazegrapherController {
             // Add the ListView to a TitledPane and add latter one to the Accordion
             accMazeTitledPanes.add(new TitledPane(mazeCategory.getKey(), mazeItemListView));
         }
-        // TODO: 08.04.2017 sicherstellen dass accordion mindestens ein kind hat (emergency maze?)
+        // TODO: 08.04.2017 sicherstellen dass accordion mindestens ein kind hat? (emergency maze?)
         checkMazes();
     }
 
@@ -244,6 +245,7 @@ public class MazegrapherController {
     private Alert getAlert(@NotNull AlertType alertType, @Nullable String title, @Nullable String headerText,
                            @Nullable String contentText, @Nullable Exception exception) {
         Alert alert = new Alert(alertType);
+        alert.initStyle(StageStyle.UTILITY);
         alert.setTitle(title);
         alert.setHeaderText(headerText);
         alert.setContentText(contentText);
