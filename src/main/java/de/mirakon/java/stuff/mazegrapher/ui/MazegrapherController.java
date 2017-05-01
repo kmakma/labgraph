@@ -22,6 +22,7 @@ import de.mirakon.java.stuff.mazegrapher.mazes.DummyMaze;
 import de.mirakon.java.stuff.mazegrapher.mazes.Maze;
 import de.mirakon.java.stuff.mazegrapher.mazes.MazeCoordinator;
 import de.mirakon.java.stuff.mazegrapher.mazes.MissingMazeArgumentException;
+import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -45,6 +46,7 @@ import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
 import static javafx.scene.control.Alert.AlertType;
+import static javafx.scene.control.ButtonBar.ButtonData;
 
 
 public class MazegrapherController {
@@ -157,8 +159,7 @@ public class MazegrapherController {
         }
 
         if (checkedMazes.length > 0) {
-
-            // TODO do some stream magick instead of POJ
+            // Check mazes from preferences (from last time)
             for (String checkedMaze : checkedMazes) {
                 accordionMazes.getPanes().stream()
                         .filter(titledPane -> titledPane.getText().equals(checkedMazesPrefs.get(checkedMaze, null)))
@@ -255,8 +256,17 @@ public class MazegrapherController {
     private void showErrorAlert(@Nullable String title, @Nullable String headerText, @Nullable String contentText,
                                 @Nullable Exception exception) {
         Alert alert = getAlert(AlertType.ERROR, title, headerText, contentText, exception);
-        // TODO: 24.04.2017 NEXT Customize Error Alert Buttons
-        alert.showAndWait();
+
+        ButtonType settingsButton = new ButtonType(strings.getString("buttonSettings"), ButtonData.OK_DONE);
+        ButtonType exitButton = new ButtonType(strings.getString("buttonExit"), ButtonData.CANCEL_CLOSE);
+        alert.getButtonTypes().setAll(settingsButton, exitButton);
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isPresent() && result.get() == settingsButton) {
+            // TODO: 01.05.2017 open settings
+        } else {
+            Platform.exit();
+        }
     }
 
     @NotNull
