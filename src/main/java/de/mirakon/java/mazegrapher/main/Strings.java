@@ -8,10 +8,29 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package de.mirakon.java.stuff.mazegrapher.mazes;
+package de.mirakon.java.mazegrapher.main;
 
-public abstract class AbstractMaze implements Maze {
+import org.jetbrains.annotations.NotNull;
 
-    public AbstractMaze() {
+import java.util.ResourceBundle;
+
+public class Strings {
+
+    private static ResourceBundle strings;
+
+    @NotNull
+    public static String getString(@NotNull String key) {
+        if(strings==null) {
+            loadStringResources();
+        }
+        return strings.getString(key);
+    }
+
+    /**
+     * Loads the MazesStrings.properties (or Strings_xx.properties) ResourceBundle containing all location dependent
+     * strings, with current default Locale
+     */
+    private static void loadStringResources() {
+        strings = ResourceBundle.getBundle("MazesStrings");
     }
 }

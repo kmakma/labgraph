@@ -8,35 +8,42 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package de.mirakon.java.stuff.mazegrapher.ui;
+package de.mirakon.java.mazegrapher.plugins;
 
-import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
+import de.mirakon.java.mazegrapher.main.AbstractMaze;
+import de.mirakon.java.mazegrapher.main.Maze;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.ResourceBundle;
+public class DummyMaze extends AbstractMaze {
 
-public class MainApp extends Application {
+    private static final String MAZE_NAME = "Dummy Maze";
+    private static final String MAZE_CATEGORY = "Dummy Mazes";
 
-    public static void main(String[] args) {
-        launch(args);
+    public DummyMaze() {
+        super();
     }
 
-    public void start(Stage stage) throws Exception {
-        ResourceBundle bundle = ResourceBundle.getBundle("Strings");
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/layout/mazegrapher.fxml"), bundle);
-        Parent mainMazeParent = loader.load();
-        MazegrapherController controller = loader.getController();
-        controller.setStageListeners(stage);
-
-        stage.setTitle("MazeGrapher");
-        stage.setScene(new Scene(mainMazeParent));
-        // TODO: 17.03.2017 setMinHeight/~Width
-        // stage.setMinHeight();
-        // stage.setMinWidth();
-        stage.show();
+    @Override
+    @NotNull
+    public Maze newInstance() {
+        return new DummyMaze();
     }
 
+    @Override
+    @NotNull
+    public String getMazeCategory() {
+        return MAZE_CATEGORY;
+    }
+
+    @Override
+    @NotNull
+    public String getMazeName() {
+        return MAZE_NAME;
+    }
+
+    @Override
+    @NotNull
+    public String getMazePlugin() {
+        return "default";
+    }
 }

@@ -8,40 +8,15 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package de.mirakon.java.stuff.mazegrapher.mazes;
+package de.mirakon.java.mazegrapher.main;
 
-import org.jetbrains.annotations.NotNull;
+/**
+ * Created by Michael on 09.04.2017.
+ */
+public class PreferencesException extends Exception {
+    private static final long serialVersionUID = 2995708487200968850L;
 
-public class DummyMaze extends AbstractMaze {
-
-    private static final String MAZE_NAME = "Dummy Maze";
-    private static final String MAZE_CATEGORY = "Dummy Mazes";
-
-    public DummyMaze() {
-        super();
-    }
-
-    @Override
-    @NotNull
-    public Maze newInstance() {
-        return new DummyMaze();
-    }
-
-    @Override
-    @NotNull
-    public String getMazeCategory() {
-        return MAZE_CATEGORY;
-    }
-
-    @Override
-    @NotNull
-    public String getMazeName() {
-        return MAZE_NAME;
-    }
-
-    @Override
-    @NotNull
-    public String getMazePlugin() {
-        return "default";
+    public PreferencesException(String message) {
+        super(message);
     }
 }

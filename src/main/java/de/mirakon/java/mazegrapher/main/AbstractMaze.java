@@ -8,28 +8,10 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package de.mirakon.java.stuff.mazegrapher.mazes;
+package de.mirakon.java.mazegrapher.main;
 
-/**
- * Thrown to indicate that a method returned an illegal or inappropriate argument.
- */
-public class MissingMazeArgumentException extends RuntimeException {
+public abstract class AbstractMaze implements Maze {
 
-    private static final long serialVersionUID = 8676434374089925605L;
-
-    public MissingMazeArgumentException() {
-        super();
-    }
-
-    public MissingMazeArgumentException(String message) {
-        super(message);
-    }
-
-    public MissingMazeArgumentException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    public MissingMazeArgumentException(Throwable cause) {
-        super(cause);
+    public AbstractMaze() {
     }
 }

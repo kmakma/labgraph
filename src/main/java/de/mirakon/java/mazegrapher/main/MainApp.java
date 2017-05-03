@@ -8,15 +8,35 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package de.mirakon.java.stuff.mazegrapher.ui;
+package de.mirakon.java.mazegrapher.main;
 
-/**
- * Created by Michael on 09.04.2017.
- */
-public class PreferencesException extends Exception {
-    private static final long serialVersionUID = 2995708487200968850L;
+import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 
-    public PreferencesException(String message) {
-        super(message);
+import java.util.ResourceBundle;
+
+public class MainApp extends Application {
+
+    public static void main(String[] args) {
+        launch(args);
     }
+
+    public void start(Stage stage) throws Exception {
+        ResourceBundle bundle = ResourceBundle.getBundle("Strings");
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/layout/mazegrapher.fxml"), bundle);
+        Parent mainMazeParent = loader.load();
+        MazegrapherController controller = loader.getController();
+        controller.setStageListeners(stage);
+
+        stage.setTitle("MazeGrapher");
+        stage.setScene(new Scene(mainMazeParent));
+        // TODO: 17.03.2017 setMinHeight/~Width
+        // stage.setMinHeight();
+        // stage.setMinWidth();
+        stage.show();
+    }
+
 }

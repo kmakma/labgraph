@@ -16,7 +16,7 @@
  * IN THE SOFTWARE.
  */
 
-package de.mirakon.java.stuff.labgrapher;
+package de.mirakon.java.labgrapher;
 
 import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;

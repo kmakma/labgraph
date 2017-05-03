@@ -16,7 +16,7 @@
  * IN THE SOFTWARE.
  */
 
-package de.mirakon.java.stuff.labgrapher;
+package de.mirakon.java.labgrapher;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -24,12 +24,12 @@ import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
- * erweitertest spezielles Labyrinth mit Jarní-Prim-Algorithmus
+ * perfektes Labyrinth mit Jarní-Prim-Algorithmus
  * <p>
  * ACHTUNG: DIESE IMPLEMENTIERUNG IST SOWAS VON ÜBERHAUPT NICHT LAUFZEIT EFFIZIENT!!!
  */
 @Deprecated
-public class LabyrinthC {
+class LabyrinthA {
 
     Node[][] labyrinth;
     Set<Node> addedNodes = new HashSet<>();
@@ -38,7 +38,7 @@ public class LabyrinthC {
     // rows
     private int sizeY;
 
-    LabyrinthC(int x, int y) {
+    LabyrinthA(int x, int y) {
         sizeX = x;
         sizeY = y;
         labyrinth = new Node[x][y];
@@ -53,7 +53,7 @@ public class LabyrinthC {
     }
 
 
-    private void createLab() {
+    void createLab() {
         int currentX = ThreadLocalRandom.current().nextInt(sizeX / 2) * 2;
         int currentY = ThreadLocalRandom.current().nextInt(sizeY / 2) * 2;
         if (addedNodes.add(labyrinth[currentX][currentY])) {
@@ -67,13 +67,13 @@ public class LabyrinthC {
             int conPosX = newConnection.getPosX();
             int conPosY = newConnection.getPosY();
             if (conPosX > 0 && labyrinth[conPosX - 1][conPosY].isPath()) {
-                openToNorthFrom(conPosX, conPosY);
+                openVerticalAt(conPosX, conPosY);
             } else if (conPosX < labyrinth.length - 1 && labyrinth[conPosX + 1][conPosY].isPath()) {
-                openToSouthFrom(conPosX, conPosY);
+                openVerticalAt(conPosX, conPosY);
             } else if (conPosY > 0 && labyrinth[conPosX][conPosY - 1].isPath()) {
-                openToWestFrom(conPosX, conPosY);
+                openHorizontalAt(conPosX, conPosY);
             } else if (conPosY < labyrinth[conPosX].length - 1 && labyrinth[conPosX][conPosY + 1].isPath()) {
-                openToEastFrom(conPosX, conPosY);
+                openHorizontalAt(conPosX, conPosY);
             } else {
                 throw new IllegalStateException("Verbindungsknoten findet keinen begehbaren Knoten");
             }
@@ -81,116 +81,53 @@ public class LabyrinthC {
         }
     }
 
-    void openToNorthFrom(int conPosX, int conPosY) {
+    void openHorizontalAt(int conPosX, int conPosY) {
+        labyrinth[conPosX][conPosY - 1].openEast();
+        labyrinth[conPosX][conPosY - 1].setToPath();
+        addedNodes.add(labyrinth[conPosX][conPosY - 1]);
+        labyrinth[conPosX][conPosY].openHorizontal();
+        labyrinth[conPosX][conPosY].setToPath();
+        labyrinth[conPosX][conPosY + 1].openWest();
+        labyrinth[conPosX][conPosY + 1].setToPath();
+        addedNodes.add(labyrinth[conPosX][conPosY + 1]);
+    }
+
+    void openVerticalAt(int conPosX, int conPosY) {
         labyrinth[conPosX - 1][conPosY].openSouth();
         labyrinth[conPosX - 1][conPosY].setToPath();
         addedNodes.add(labyrinth[conPosX - 1][conPosY]);
-        labyrinth[conPosX][conPosY].openNorth();
+        labyrinth[conPosX][conPosY].openVertical();
         labyrinth[conPosX][conPosY].setToPath();
-        addedNodes.add(labyrinth[conPosX][conPosY]);
-
-    }
-
-    void openToSouthFrom(int conPosX, int conPosY) {
-        labyrinth[conPosX][conPosY].openSouth();
-        labyrinth[conPosX][conPosY].setToPath();
-        addedNodes.add(labyrinth[conPosX][conPosY]);
         labyrinth[conPosX + 1][conPosY].openNorth();
         labyrinth[conPosX + 1][conPosY].setToPath();
         addedNodes.add(labyrinth[conPosX + 1][conPosY]);
     }
 
-    void openToWestFrom(int conPosX, int conPosY) {
-        labyrinth[conPosX][conPosY].openWest();
-        labyrinth[conPosX][conPosY].setToPath();
-        addedNodes.add(labyrinth[conPosX][conPosY]);
-        labyrinth[conPosX][conPosY - 1].openEast();
-        labyrinth[conPosX][conPosY - 1].setToPath();
-        addedNodes.add(labyrinth[conPosX][conPosY - 1]);
-    }
-
-    void openToEastFrom(int conPosX, int conPosY) {
-        labyrinth[conPosX][conPosY + 1].openWest();
-        labyrinth[conPosX][conPosY + 1].setToPath();
-        addedNodes.add(labyrinth[conPosX][conPosY + 1]);
-        labyrinth[conPosX][conPosY].openEast();
-        labyrinth[conPosX][conPosY].setToPath();
-        addedNodes.add(labyrinth[conPosX][conPosY]);
-    }
-
-    private ArrayList<Node> findPossibleConnections() {
+    ArrayList<Node> findPossibleConnections() {
         ArrayList<Node> possibleConnectionNodes = new ArrayList<>();
         for (Node node : addedNodes) {
-            if (node.isWallNorth() && node.getPosX() >= 1) {
-                if (isNodePossibleConnection(labyrinth[node.getPosX() - 1][node.getPosY()])) {
+            if (node.isWallNorth() && node.getPosX() >= 2) {
+                if (!labyrinth[node.getPosX() - 2][node.getPosY()].isPath()) {
                     possibleConnectionNodes.add(labyrinth[node.getPosX() - 1][node.getPosY()]);
                 }
             }
-            if (node.isWallEast() && node.getPosY() < labyrinth[node.getPosX()].length - 1) {
-                if (isNodePossibleConnection(labyrinth[node.getPosX()][node.getPosY() + 1])) {
+            if (node.isWallEast() && node.getPosY() < labyrinth[node.getPosX()].length - 2) {
+                if (!labyrinth[node.getPosX()][node.getPosY() + 2].isPath()) {
                     possibleConnectionNodes.add(labyrinth[node.getPosX()][node.getPosY() + 1]);
                 }
             }
-            if (node.isWallSouth() && node.getPosX() < labyrinth.length - 1) {
-                if (isNodePossibleConnection(labyrinth[node.getPosX() + 1][node.getPosY()])) {
+            if (node.isWallSouth() && node.getPosX() < labyrinth.length - 2) {
+                if (!labyrinth[node.getPosX() + 2][node.getPosY()].isPath()) {
                     possibleConnectionNodes.add(labyrinth[node.getPosX() + 1][node.getPosY()]);
                 }
             }
-            if (node.isWallWest() && node.getPosY() >= 1) {
-                if (isNodePossibleConnection(labyrinth[node.getPosX()][node.getPosY() - 1])) {
+            if (node.isWallWest() && node.getPosY() >= 2) {
+                if (!labyrinth[node.getPosX()][node.getPosY() - 2].isPath()) {
                     possibleConnectionNodes.add(labyrinth[node.getPosX()][node.getPosY() - 1]);
                 }
             }
         }
         return possibleConnectionNodes;
-    }
-
-    protected boolean isNodePossibleConnection(Node node) {
-        if (node.isPath()) return false;
-
-        int directNeighbours = 0;
-        int indirectNeighbours = 0;
-        boolean hasNorth = node.getPosX() > 0;
-        boolean hasSouth = node.getPosX() < labyrinth.length - 1;
-        boolean hasWest = node.getPosY() > 0;
-        boolean hasEast = node.getPosY() < labyrinth[0].length - 1;
-
-        if (hasNorth && labyrinth[node.getPosX() - 1][node.getPosY()].isPath()) {
-            directNeighbours++;
-        }
-        if (hasSouth && labyrinth[node.getPosX() + 1][node.getPosY()].isPath()) {
-            directNeighbours++;
-        }
-        if (hasWest && labyrinth[node.getPosX()][node.getPosY() - 1].isPath()) {
-            directNeighbours++;
-        }
-        if (hasEast && labyrinth[node.getPosX()][node.getPosY() + 1].isPath()) {
-            directNeighbours++;
-        }
-
-        if (hasNorth && hasWest) {
-            if (labyrinth[node.getPosX() - 1][node.getPosY() - 1].isPath()) {
-                indirectNeighbours++;
-            }
-        }
-        if (hasNorth && hasEast) {
-            if (labyrinth[node.getPosX() - 1][node.getPosY() + 1].isPath()) {
-                indirectNeighbours++;
-            }
-        }
-        if (hasSouth && hasWest) {
-            if (labyrinth[node.getPosX() + 1][node.getPosY() - 1].isPath()) {
-                indirectNeighbours++;
-            }
-        }
-        if (hasSouth && hasEast) {
-            if (labyrinth[node.getPosX() + 1][node.getPosY() + 1].isPath()) {
-                indirectNeighbours++;
-            }
-        }
-
-
-        return (directNeighbours == 1 && indirectNeighbours < 2);
     }
 
 //    if(node.isWallNorth()&&node.getPosX()>=2)

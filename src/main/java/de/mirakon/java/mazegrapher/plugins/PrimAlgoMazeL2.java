@@ -16,21 +16,48 @@
  * IN THE SOFTWARE.
  */
 
-package de.mirakon.java.stuff.mazegrapher.mazes;
+package de.mirakon.java.mazegrapher.plugins;
 
+import de.mirakon.java.mazegrapher.main.AbstractMaze;
+import de.mirakon.java.mazegrapher.main.Maze;
 import org.jetbrains.annotations.NotNull;
 
-public interface Maze {
-    // LabyrinthA , ~B, ~D sind die vielversprechendsten
+/**
+ * A maze of this class is created by using a randomized version of prim's algorithm (sort of creating a minimal
+ * spanning tree). During generation, paths of length two are constructed from possible junctions creating new junctions
+ * (therefore the class suffix "L2")
+ */
+public class PrimAlgoMazeL2 extends AbstractMaze {
 
-    // TODO: 20.03.2017 newInstance mit argumenten hinzufügen
-    @NotNull Maze newInstance();
+    private static final String mazeCategory = "Perfect Mazes";
+    private static final String mazeName = "PrimAlgoL2";
+    private static final String mazePlugin = "default";
 
-    @NotNull String getMazeCategory();
+    public PrimAlgoMazeL2() {
 
-    @NotNull String getMazeName();
+    }
 
-    @NotNull String getMazePlugin();
+    private PrimAlgoMazeL2(int i) {
 
-    // TODO: 02.05.2017 String getDescription();
+    }
+
+    @Override
+    public @NotNull Maze newInstance() {
+        return new PrimAlgoMazeL2(4);
+    }
+
+    @Override
+    public @NotNull String getMazeCategory() {
+        return mazeCategory;
+    }
+
+    @Override
+    public @NotNull String getMazeName() {
+        return mazeName;
+    }
+
+    @Override
+    public @NotNull String getMazePlugin() {
+        return mazePlugin;
+    }
 }

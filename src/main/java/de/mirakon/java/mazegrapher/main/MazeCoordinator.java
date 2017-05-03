@@ -16,8 +16,10 @@
  * IN THE SOFTWARE.
  */
 
-package de.mirakon.java.stuff.mazegrapher.mazes;
+package de.mirakon.java.mazegrapher.main;
 
+import de.mirakon.java.mazegrapher.plugins.DummyMaze;
+import de.mirakon.java.mazegrapher.plugins.PrimAlgoMazeL2;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;

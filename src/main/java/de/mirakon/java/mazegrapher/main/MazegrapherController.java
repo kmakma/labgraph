@@ -16,12 +16,9 @@
  * IN THE SOFTWARE.
  */
 
-package de.mirakon.java.stuff.mazegrapher.ui;
+package de.mirakon.java.mazegrapher.main;
 
-import de.mirakon.java.stuff.mazegrapher.mazes.DummyMaze;
-import de.mirakon.java.stuff.mazegrapher.mazes.Maze;
-import de.mirakon.java.stuff.mazegrapher.mazes.MazeCoordinator;
-import de.mirakon.java.stuff.mazegrapher.mazes.MissingMazeArgumentException;
+import de.mirakon.java.mazegrapher.plugins.DummyMaze;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;

@@ -16,7 +16,7 @@
  * IN THE SOFTWARE.
  */
 
-package de.mirakon.java.stuff.labgrapher;
+package de.mirakon.java.labgrapher;
 @Deprecated
 class Node {
 
