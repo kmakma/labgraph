@@ -25,6 +25,12 @@ import java.util.TreeMap;
 
 public class MazeCoordinator {
 
+    // http://datapile.coffeecrew.org/blog/2013/06/02/creating-a-simple-plugin-mechanism-in-java/
+    // http://www.javaranch.com/journal/200607/Plugins.html
+    // http://stackoverflow.com/questions/25449/how-to-create-a-pluginable-java-program
+    // http://stackoverflow.com/questions/465099/best-way-to-build-a-plugin-system-with-java
+    // https://wiki.byte-welt.net/wiki/Java-Programme_durch_PlugIns_erweitern
+
     public static TreeMap<String, Maze> getDefaultMazeMap() throws MissingMazeArgumentException, IllegalStateException {
         return putMazesInMap(null, getDefaultMazes());
     }
@@ -59,6 +65,7 @@ public class MazeCoordinator {
 
     private static ArrayList<Maze> getDefaultMazes() {
         ArrayList<Maze> defaultMazes = new ArrayList<>();
+        defaultMazes.add(new PrimAlgoMazeL2());
         defaultMazes.add(new DummyMaze());
         return defaultMazes;
     }
