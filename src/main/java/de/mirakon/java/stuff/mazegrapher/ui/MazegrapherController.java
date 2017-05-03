@@ -152,6 +152,7 @@ public class MazegrapherController {
             accMazeTitledPanes.add(new TitledPane(mazeCategory.getKey(), mazeItemListView));
         }
         // TODO: 08.04.2017 sicherstellen dass accordion mindestens ein kind hat? (emergency maze?)
+        // TODO: 02.05.2017 besschreibung des angeklickten (nicht ge-check-ten) anzeigen
         checkMazes();
     }
 
@@ -217,8 +218,7 @@ public class MazegrapherController {
         // TODO: 08.04.2017 beim beenden (des programms) aktuelle checkedMazesPrefs mit checkedMazes überschreiben
     }
 
-    @NotNull
-    private Maze createRandomMaze() {
+    private @NotNull Maze createRandomMaze() {
         Maze maze = getRandomMazeInstance();
         // TODO: 22.03.2017 throw / meldung
         if (maze == null) {
@@ -230,8 +230,7 @@ public class MazegrapherController {
         return maze.newInstance();
     }
 
-    @NotNull
-    private Maze getRandomMazeInstance() {
+    private @NotNull Maze getRandomMazeInstance() {
         String[] checkedMazes = this.checkedMazes.toArray(new String[this.checkedMazes.size()]);
         String mazeName;
         if (checkedMazes.length > 0) {
@@ -253,15 +252,13 @@ public class MazegrapherController {
         return new DummyMaze();
     }
 
-    @NotNull
-    private int[] getRandomMazeSize() {
+    private @NotNull int[] getRandomMazeSize() {
         // TODO: 22.03.2017 präferenz holen, wenn nicht gefunden standardwerte von irgendwo holen
         return new int[]{20, 20};
     }
 
-    @NotNull
-    private Alert getAlert(@NotNull AlertType alertType, @Nullable String title, @Nullable String headerText,
-                           @Nullable String contentText, @Nullable Exception exception) {
+    private @NotNull Alert getAlert(@NotNull AlertType alertType, @Nullable String title, @Nullable String headerText,
+                                    @Nullable String contentText, @Nullable Exception exception) {
         Alert alert = new Alert(alertType);
         alert.initStyle(StageStyle.UTILITY);
         alert.setTitle(title);
@@ -289,8 +286,7 @@ public class MazegrapherController {
         }
     }
 
-    @NotNull
-    private Node createExpandableContent(@NotNull Exception exception) {
+    private @NotNull Node createExpandableContent(@NotNull Exception exception) {
         // Stacktrace String
         StringWriter stringWriter = new StringWriter();
         PrintWriter printWriter = new PrintWriter(stringWriter);
