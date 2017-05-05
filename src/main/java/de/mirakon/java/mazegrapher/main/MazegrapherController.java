@@ -33,6 +33,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -119,7 +120,7 @@ public class MazegrapherController {
 
     private void fetchMazes() throws MissingMazeArgumentException, IllegalStateException {
         // TODO: 21.03.2017 with plugin, do more :P
-        mazes = MazeCoordinator.getDefaultMazeMap();
+        mazes = MazeManager.getDefaultMazePluginMap();
     }
 
     private void populateAccordion() {
@@ -153,6 +154,7 @@ public class MazegrapherController {
         checkMazes();
     }
 
+    @NotNull
     private TreeMap<String, ArrayList<String>> getMazeNamesByCategory() {
         TreeMap<String, ArrayList<String>> mazesByCategories = new TreeMap<>();
         for (Map.Entry<String, Maze> mazeEntry : mazes.entrySet()) {
@@ -179,6 +181,7 @@ public class MazegrapherController {
             // Check mazes from preferences (from last time)
             for (String checkedMaze : checkedMazes) {
                 accordionMazes.getPanes().stream()
+                        // TODO: 05.05.2017 kommentare hinzufügen
                         .filter(titledPane -> titledPane.getText().equals(checkedMazesPrefs.get(checkedMaze, null)))
                         .limit(1)
                         .flatMap(titledPane -> ((ListView<MazeItem>) titledPane.getContent()).getItems().stream())
@@ -212,10 +215,10 @@ public class MazegrapherController {
             MazeItem firstMazeItem = listView.getItems().get(0);
             firstMazeItem.setChecked(true);
         }
-        // TODO: 08.04.2017 beim beenden (des programms) aktuelle checkedMazesPrefs mit checkedMazes überschreiben
     }
 
-    private @NotNull Maze createRandomMaze() {
+    @NotNull
+    private Maze createRandomMaze() {
         Maze maze = getRandomMazeInstance();
         // TODO: 22.03.2017 throw / meldung
         if (maze == null) {
@@ -224,10 +227,12 @@ public class MazegrapherController {
         // TODO: 21.03.2017 maze größen erstellen
         // TODO: 21.03.2017 maze instanz besorgen und prüfen ob erster maze frei (dann entweder direkt als array oder
         // maze abspeichern)
+
         return maze.newInstance();
     }
 
-    private @NotNull Maze getRandomMazeInstance() {
+    @NotNull
+    private Maze getRandomMazeInstance() {
         String[] checkedMazes = this.checkedMazes.toArray(new String[this.checkedMazes.size()]);
         String mazeName;
         if (checkedMazes.length > 0) {
@@ -249,13 +254,15 @@ public class MazegrapherController {
         return new DummyMaze();
     }
 
-    private @NotNull int[] getRandomMazeSize() {
+    @NotNull
+    private int[] getRandomMazeSize() {
         // TODO: 22.03.2017 präferenz holen, wenn nicht gefunden standardwerte von irgendwo holen
         return new int[]{20, 20};
     }
 
-    private @NotNull Alert getAlert(@NotNull AlertType alertType, @Nullable String title, @Nullable String headerText,
-                                    @Nullable String contentText, @Nullable Exception exception) {
+    @NotNull
+    private Alert getAlert(@NotNull AlertType alertType, @Nullable String title, @Nullable String headerText,
+                           @Nullable String contentText, @Nullable Exception exception) {
         Alert alert = new Alert(alertType);
         alert.initStyle(StageStyle.UTILITY);
         alert.setTitle(title);
@@ -283,7 +290,8 @@ public class MazegrapherController {
         }
     }
 
-    private @NotNull Node createExpandableContent(@NotNull Exception exception) {
+    @NotNull
+    private Node createExpandableContent(@NotNull Exception exception) {
         // Stacktrace String
         StringWriter stringWriter = new StringWriter();
         PrintWriter printWriter = new PrintWriter(stringWriter);
@@ -315,6 +323,7 @@ public class MazegrapherController {
             setChecked(checked);
         }
 
+        @Contract(pure = true)
         final StringProperty getMazeNameProperty() {
             return this.mazeName;
         }
@@ -327,6 +336,7 @@ public class MazegrapherController {
             this.getMazeNameProperty().set(mazeVariantName);
         }
 
+        @Contract(pure = true)
         final BooleanProperty checkedProperty() {
             return this.isChecked;
         }

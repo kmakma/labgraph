@@ -20,7 +20,7 @@ package de.mirakon.java.mazegrapher.main;
 
 import org.jetbrains.annotations.NotNull;
 
-public interface Maze {
+interface Maze {
     // LabyrinthA , ~B, ~D sind die vielversprechendsten
 
     // TODO: 20.03.2017 newInstance mit argumenten hinzufügen
@@ -32,5 +32,5 @@ public interface Maze {
 
     @NotNull String getMazePlugin();
 
-    // TODO: 02.05.2017 String getDescription();
+    // TODO: 05.05.2017 @Nullable String getDescription();
 }

@@ -11,7 +11,6 @@
 package de.mirakon.java.mazegrapher.plugins;
 
 import de.mirakon.java.mazegrapher.main.AbstractMaze;
-import de.mirakon.java.mazegrapher.main.Maze;
 import org.jetbrains.annotations.NotNull;
 
 public class DummyMaze extends AbstractMaze {
@@ -21,12 +20,6 @@ public class DummyMaze extends AbstractMaze {
 
     public DummyMaze() {
         super();
-    }
-
-    @Override
-    @NotNull
-    public Maze newInstance() {
-        return new DummyMaze();
     }
 
     @Override

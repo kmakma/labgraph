@@ -16,45 +16,21 @@
  * IN THE SOFTWARE.
  */
 
-package de.mirakon.java.mazegrapher.plugins;
-
-import de.mirakon.java.mazegrapher.main.AbstractMaze;
-import org.jetbrains.annotations.NotNull;
+package de.mirakon.java.mazegrapher.main;
 
 /**
- * A maze of this class is created by using a randomized version of prim's algorithm (sort of creating a minimal
- * spanning tree). During generation, paths of length two are constructed from possible junctions creating new junctions
- * (therefore the class suffix "L2")
+ * Thrown to indicate that the implementation of a class is not valid
  */
-public class PrimAlgoMazeL2 extends AbstractMaze {
-
-    private static final String mazeCategory = "Perfect Mazes";
-    private static final String mazeName = "PrimAlgoL2";
-    private static final String mazePlugin = "default";
-
-    public PrimAlgoMazeL2() {
-
+public class InvalidImplementationException extends RuntimeException {
+    public InvalidImplementationException(String message) {
+        super(message);
     }
 
-    private PrimAlgoMazeL2(int i) {
-
+    public InvalidImplementationException(String message, Throwable cause) {
+        super(message, cause);
     }
 
-    @Override
-    @NotNull
-    public String getMazeCategory() {
-        return mazeCategory;
-    }
-
-    @Override
-    @NotNull
-    public String getMazeName() {
-        return mazeName;
-    }
-
-    @Override
-    @NotNull
-    public String getMazePlugin() {
-        return mazePlugin;
+    public InvalidImplementationException(Throwable cause) {
+        super(cause);
     }
 }

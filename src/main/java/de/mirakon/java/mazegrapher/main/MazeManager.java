@@ -20,12 +20,15 @@ package de.mirakon.java.mazegrapher.main;
 
 import de.mirakon.java.mazegrapher.plugins.DummyMaze;
 import de.mirakon.java.mazegrapher.plugins.PrimAlgoMazeL2;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.TreeMap;
+import java.util.stream.Stream;
 
-public class MazeCoordinator {
+public class MazeManager {
 
     // http://datapile.coffeecrew.org/blog/2013/06/02/creating-a-simple-plugin-mechanism-in-java/
     // http://www.javaranch.com/journal/200607/Plugins.html
@@ -33,15 +36,38 @@ public class MazeCoordinator {
     // http://stackoverflow.com/questions/465099/best-way-to-build-a-plugin-system-with-java
     // https://wiki.byte-welt.net/wiki/Java-Programme_durch_PlugIns_erweitern
 
-    public static TreeMap<String, Maze> getDefaultMazeMap() throws MissingMazeArgumentException, IllegalStateException {
-        return putMazesInMap(null, getDefaultMazes());
+    @NotNull
+    public static TreeMap<String, Maze> getDefaultMazePluginMap() throws MissingMazeArgumentException,
+            IllegalStateException {
+        return putPluginsInMap(null, getDefaultPlugins());
     }
 
-    private static TreeMap<String, Maze> putMazesInMap(@Nullable TreeMap<String, Maze> mazeTree, ArrayList<Maze>
-            mazes) throws MissingMazeArgumentException, IllegalStateException {
-        if (mazeTree == null) {
-            mazeTree = new TreeMap<>();
+    @NotNull
+    private static TreeMap<String, Maze> putPluginsInMap(@Nullable TreeMap<String, Maze> mazePluginTree,
+                                                         @NotNull ArrayList<Class> plugins) throws
+            MissingMazeArgumentException, IllegalStateException {
+        if (mazePluginTree == null) {
+            mazePluginTree = new TreeMap<>();
         }
+
+        Class[] pluginsArray = plugins.stream()
+                .filter(clazz -> !clazz.isInterface())
+                .filter(clazz -> !Modifier.isAbstract(clazz.getModifiers()))
+                .filter(Maze.class::isAssignableFrom)
+                .filter(clazz -> Stream.of(clazz.getConstructors()).anyMatch(constructor -> constructor
+                        .getParameterCount() == 0))
+                .toArray(Class[]::new);
+
+        Maze[] mazes = new Maze[pluginsArray.length];
+        try {
+            for (int i = 0; i < pluginsArray.length; i++) {
+                mazes[i] = (Maze) pluginsArray[i].newInstance();
+            }
+        } catch (InstantiationException | IllegalAccessException e) {
+            // Isn't supposed to happen, all Class objects should be filtered away
+            e.printStackTrace();
+        }
+
         for (Maze maze : mazes) {
             if ("".equals(maze.getMazeName())) {
                 throw new MissingMazeArgumentException(Strings.getString("errorMazeMissingName"));
@@ -56,19 +82,21 @@ public class MazeCoordinator {
                 throw new MissingMazeArgumentException(Strings.getString("errorMazeMissingPlugin") + " " +
                         newMazeName);
             }
-            if (mazeTree.putIfAbsent(newMazeName, maze) != null) {
+            if (mazePluginTree.putIfAbsent(newMazeName, maze) != null) {
                 String duplicateMaze = String.format(" name: %s; category: %s; plugin: %s", maze.getMazeName(), maze
                         .getMazeCategory(), maze.getMazePlugin());
                 throw new IllegalStateException(Strings.getString("errorMazeDuplicate") + duplicateMaze);
             }
         }
-        return mazeTree;
+
+        return mazePluginTree;
     }
 
-    private static ArrayList<Maze> getDefaultMazes() {
-        ArrayList<Maze> defaultMazes = new ArrayList<>();
-        defaultMazes.add(new PrimAlgoMazeL2());
-        defaultMazes.add(new DummyMaze());
-        return defaultMazes;
+    @NotNull
+    private static ArrayList<Class> getDefaultPlugins() {
+        ArrayList<Class> defaultPlugins = new ArrayList<>();
+        defaultPlugins.add(DummyMaze.class);
+        defaultPlugins.add(PrimAlgoMazeL2.class);
+        return defaultPlugins;
     }
 }
