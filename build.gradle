@@ -14,7 +14,7 @@ version '0.2.01-SNAPSHOT'
 apply plugin: 'java'
 apply plugin: 'application'
 
-mainClassName = "de.mirakon.java.mazegrapher.ui.MainApp"
+mainClassName = "de.mirakon.java.mazegrapher.main.MainApp"
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
@@ -22,14 +22,12 @@ repositories {
     mavenCentral()
 }
 
-jar {
-    manifest {
-        attributes(
-                'Implementation-Title': 'MazeGrapher',
-                'Implementation-Version': version,
-                'Main-Class': mainClassName
-        )
-    }
+manifest {
+    attributes(
+            'Implementation-Title': 'MazeGrapher',
+            'Implementation-Version': version,
+            'Main-Class': mainClassName
+    )
 }
 
 javadoc {
