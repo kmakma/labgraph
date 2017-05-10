@@ -90,7 +90,7 @@ public class MazegrapherController {
             fetchPreferences();
             fetchMazes();
             populateAccordion();
-            currentMaze = createRandomMaze();
+            currentMaze = getRandomMaze();
         } catch (MissingMazeArgumentException | IllegalStateException e) {
             showErrorAlert(strings.getString("error"), strings.getString("errorInitialization"), e.getMessage(), e);
         }
@@ -116,9 +116,12 @@ public class MazegrapherController {
         mazes = MazeManager.getDefaultMazePluginMap();
     }
 
-    private void populateAccordion() {
+    private void populateAccordion() throws IllegalStateException {
         // Sort mazes by category
         TreeMap<String, ArrayList<String>> mazesByCategories = getMazeNamesByCategory();
+        if (mazesByCategories.size() == 0) {
+            throw new IllegalStateException(strings.getString("errorNoMazeFound"));
+        }
         // Clear current accordion, to repopulate it
         ObservableList<TitledPane> accMazeTitledPanes = accordionMazes.getPanes();
         accMazeTitledPanes.clear();
@@ -126,6 +129,7 @@ public class MazegrapherController {
         for (Map.Entry<String, ArrayList<String>> mazeCategory : mazesByCategories.entrySet()) {
             // Create a ListView and populate it with mazes of one Category
             ListView<MazeItem> mazeItemListView = new ListView<>();
+            ObservableList<MazeItem> mazesOfCategory = mazeItemListView.getItems();
             for (String mazeName : mazeCategory.getValue()) {
                 MazeItem mazeItem = new MazeItem(mazeName, false);
                 mazeItem.checkedProperty().addListener((obs, wasChecked, isNowChecked) -> {
@@ -135,16 +139,31 @@ public class MazegrapherController {
                         checkedMazes.remove(mazeItem.getMazeName());
                     }
                 });
-                mazeItemListView.getItems().add(mazeItem);
+                mazesOfCategory.add(mazeItem);
             }
+            // Add listener to show description of selected mazeItem
+            mazeItemListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue)
+                    -> {
+                String description = getDescription(newValue.getMazeName());
+                showDescription(description);
+            });
             // Add check boxes to the list items
             mazeItemListView.setCellFactory(CheckBoxListCell.forListView(MazeItem::checkedProperty));
             // Add the ListView to a TitledPane and add latter one to the Accordion
             accMazeTitledPanes.add(new TitledPane(mazeCategory.getKey(), mazeItemListView));
         }
-        // TODO: 08.04.2017 sicherstellen dass accordion mindestens ein kind hat? (emergency maze?)
-        // TODO: 02.05.2017 besschreibung des angeklickten (nicht ge-check-ten) anzeigen
         checkMazes();
+    }
+
+    private String getDescription(String mazeName) {
+        return mazes.get(mazeName).getDescription();
+    }
+
+    private void showDescription(@Nullable String description) {
+        if (description == null) {
+            description = strings.getString("descriptionPlaceholder");
+        }
+        // TODO: 10.05.2017 get description textfield and set description
     }
 
     @NotNull
@@ -189,15 +208,21 @@ public class MazegrapherController {
             }
         } else {
             // Check first maze
-            TitledPane firstTitledPane = accordionMazes.getPanes().get(0);
-            ListView<MazeItem> listView = (ListView<MazeItem>) firstTitledPane.getContent();
-            MazeItem firstMazeItem = listView.getItems().get(0);
-            firstMazeItem.setChecked(true);
+            checkFirstMaze();
         }
     }
 
+    @SuppressWarnings("unchecked")
+    private String checkFirstMaze() {
+        TitledPane firstTitledPane = accordionMazes.getPanes().get(0);
+        ListView<MazeItem> listView = (ListView<MazeItem>) firstTitledPane.getContent();
+        MazeItem firstMazeItem = listView.getItems().get(0);
+        firstMazeItem.setChecked(true);
+        return firstMazeItem.getMazeName();
+    }
+
     @NotNull
-    private Maze createRandomMaze() {
+    private Maze getRandomMaze() {
         Maze maze = getRandomMazeInstance();
         // TODO: 22.03.2017 throw / meldung
         if (maze == null) {

@@ -19,6 +19,7 @@
 package de.mirakon.java.mazegrapher.main;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public abstract class AbstractMaze implements Maze {
 
@@ -33,5 +34,11 @@ public abstract class AbstractMaze implements Maze {
         } catch (InstantiationException | IllegalAccessException e) {
             throw new InvalidImplementationException(e);
         }
+    }
+
+    @Override
+    @Nullable
+    public String getDescription() {
+        return null;
     }
 }

@@ -19,11 +19,11 @@
 package de.mirakon.java.mazegrapher.main;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 interface Maze {
     // LabyrinthA , ~B, ~D sind die vielversprechendsten
 
-    // TODO: 20.03.2017 newInstance mit argumenten hinzufügen
     @NotNull Maze newInstance();
 
     @NotNull String getMazeCategory();
@@ -32,5 +32,7 @@ interface Maze {
 
     @NotNull String getMazePlugin();
 
-    // TODO: 05.05.2017 @Nullable String getDescription();
+    @Nullable String getDescription();
+
+    // TODO: 10.05.2017 generation methoden hinzufügen
 }
