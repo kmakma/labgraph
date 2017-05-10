@@ -30,12 +30,15 @@ import java.util.stream.Stream;
 
 public class MazeManager {
 
+    // TODO: 10.05.2017 prepare for plugin system
     // http://datapile.coffeecrew.org/blog/2013/06/02/creating-a-simple-plugin-mechanism-in-java/
     // http://www.javaranch.com/journal/200607/Plugins.html
     // http://stackoverflow.com/questions/25449/how-to-create-a-pluginable-java-program
     // http://stackoverflow.com/questions/465099/best-way-to-build-a-plugin-system-with-java
     // https://wiki.byte-welt.net/wiki/Java-Programme_durch_PlugIns_erweitern
 
+    // TODO: 10.05.2017 methods to get plugins from jars and classes
+    // TODO: 10.05.2017 methods to save/load paths somewhere (preferences)
     @NotNull
     public static TreeMap<String, Maze> getDefaultMazePluginMap() throws MissingMazeArgumentException,
             IllegalStateException {

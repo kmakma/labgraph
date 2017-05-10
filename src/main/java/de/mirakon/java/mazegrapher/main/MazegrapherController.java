@@ -50,7 +50,7 @@ import static javafx.scene.control.ButtonBar.ButtonData;
 
 public class MazegrapherController {
 
-    public static final String CHECKEDMAZES_PREF_NODE_PATH = generateExtraPreferencesNodePath("checkedmazes");
+    public static final String CHECKEDMAZES_PREF_NODE = "checkedmazes";
 
     @FXML
     private Accordion accordionMazes;
@@ -62,14 +62,6 @@ public class MazegrapherController {
 
     private Set<String> checkedMazes = Collections.synchronizedSet(new HashSet<>());
     private Maze currentMaze;
-
-
-    private static String generateExtraPreferencesNodePath(@NotNull String extra) {
-        String className = MazegrapherController.class.getName();
-        int endIndex = className.lastIndexOf('.');
-        String packageName = className.substring(0, endIndex).replace('.', '/');
-        return String.format("/%s/%s", packageName, extra);
-    }
 
     void setStageListeners(@NotNull Stage stage) {
         stage.setOnCloseRequest(event -> {
@@ -115,7 +107,8 @@ public class MazegrapherController {
     }
 
     private void fetchPreferences() {
-        checkedMazesPrefs = Preferences.userRoot().node(CHECKEDMAZES_PREF_NODE_PATH);
+        checkedMazesPrefs = Preferences.userRoot().node(Constants.generateExtraPreferencesNodePath(this.getClass(),
+                CHECKEDMAZES_PREF_NODE));
     }
 
     private void fetchMazes() throws MissingMazeArgumentException, IllegalStateException {
@@ -181,33 +174,19 @@ public class MazegrapherController {
             // Check mazes from preferences (from last time)
             for (String checkedMaze : checkedMazes) {
                 accordionMazes.getPanes().stream()
-                        // TODO: 05.05.2017 kommentare hinzufügen
+                        // get all TitledPanes with names equal to the category of current checkedMaze,
+                        // checkedMazesPreference (key = maze name, value = category) and limit it to length of one,
+                        // since there should be only one TitledPane per category
                         .filter(titledPane -> titledPane.getText().equals(checkedMazesPrefs.get(checkedMaze, null)))
                         .limit(1)
+                        // from all mazes (MazeItems) of the TitledPane
                         .flatMap(titledPane -> ((ListView<MazeItem>) titledPane.getContent()).getItems().stream())
+                        // get the one with equal name to current checkedMaze
                         .filter(mazeItem -> mazeItem.getMazeName().equals(checkedMaze))
                         .limit(1)
+                        // and set it as checked
                         .forEach(mazeItem -> mazeItem.setChecked(true));
             }
-
-            // Check mazes from preferences (from last time)
-            /*
-            for (String checkedMaze : checkedMazes) {
-                ObservableList<TitledPane> titledPanes = accordionMazes.getPanes();
-                for (TitledPane titledPane : titledPanes) {
-                    if (titledPane.getText().equals(checkedMazesPrefs.get(checkedMaze, null))) {
-                        ObservableList<MazeItem> mazeItems = ((ListView<MazeItem>) titledPane.getContent()).getItems();
-                        for (MazeItem mazeItem : mazeItems) {
-                            if (mazeItem.getMazeName().equals(checkedMaze)) {
-                                mazeItem.setChecked(true);
-                                break;
-                            }
-                        }
-                        break;
-                    }
-                }
-            }
-             */
         } else {
             // Check first maze
             TitledPane firstTitledPane = accordionMazes.getPanes().get(0);
