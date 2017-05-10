@@ -27,10 +27,10 @@ public class Strings {
     }
 
     /**
-     * Loads the MazesStrings.properties (or Strings_xx.properties) ResourceBundle containing all location dependent
+     * Loads the Strings.properties (or Strings_xx.properties) ResourceBundle containing all location dependent
      * strings, with current default Locale
      */
     private static void loadStringResources() {
-        strings = ResourceBundle.getBundle("MazesStrings");
+        strings = ResourceBundle.getBundle("Strings");
     }
 }
