@@ -55,6 +55,9 @@ public class MazegrapherController {
     @FXML
     private Accordion accordionMazes;
 
+    @FXML
+    private TextArea mazeDescription;
+
     private ResourceBundle strings;
 
     private Preferences checkedMazesPrefs;
@@ -74,7 +77,7 @@ public class MazegrapherController {
             checkedMazesPrefs.clear();
         } catch (BackingStoreException e) {
             getAlert(AlertType.WARNING, strings.getString("warning"), null, strings.getString
-                    ("warningPrefContentClearCheckedMazes"), e).show();
+                    ("warningPrefClearCheckedMazesContent"), e).show();
         }
         for (String mazeName : checkedMazes) {
             Maze checkedMaze = mazes.get(mazeName);
@@ -137,6 +140,10 @@ public class MazegrapherController {
                         checkedMazes.add(mazeItem.getMazeName());
                     } else {
                         checkedMazes.remove(mazeItem.getMazeName());
+                        if (checkedMazes.size() == 0) {
+                            getAlert(AlertType.WARNING, strings.getString("warning"), null, strings.getString
+                                    ("warningNoCheckedMazesContent"), null).showAndWait();
+                        }
                     }
                 });
                 mazesOfCategory.add(mazeItem);
@@ -163,7 +170,7 @@ public class MazegrapherController {
         if (description == null) {
             description = strings.getString("descriptionPlaceholder");
         }
-        // TODO: 10.05.2017 get description textfield and set description
+        mazeDescription.setText(description);
     }
 
     @NotNull
@@ -183,9 +190,8 @@ public class MazegrapherController {
             checkedMazes = checkedMazesPrefs.keys();
         } catch (BackingStoreException e) {
             getAlert(AlertType.WARNING, strings.getString("warning"), strings.getString
-                            ("warningPrefHeaderLoadCheckedMazes"), strings.getString
-                            ("warningPrefContentLoadCheckedMazes"),
-                    e).show();
+                    ("warningPrefLoadCheckedMazesHeader"), strings.getString
+                    ("warningPrefLoadCheckedMazesContent"), e).show();
             checkedMazes = new String[0];
         }
 
@@ -213,12 +219,11 @@ public class MazegrapherController {
     }
 
     @SuppressWarnings("unchecked")
-    private String checkFirstMaze() {
+    private void checkFirstMaze() {
         TitledPane firstTitledPane = accordionMazes.getPanes().get(0);
         ListView<MazeItem> listView = (ListView<MazeItem>) firstTitledPane.getContent();
         MazeItem firstMazeItem = listView.getItems().get(0);
         firstMazeItem.setChecked(true);
-        return firstMazeItem.getMazeName();
     }
 
     @NotNull
