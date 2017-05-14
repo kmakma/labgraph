@@ -21,18 +21,51 @@ package de.mirakon.java.mazegrapher.main;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-interface Maze {
+/**
+ * An object representing a way to create a maze. It's recommended to use {@link AbstractMaze} for implementations of
+ * {@code Maze} plugins, instead of the interface itself.
+ * <p>
+ * Duplicate plugins, same name, cateogry and plugin name, are not allowed.
+ */
+public interface Maze {
     // LabyrinthA , ~B, ~D sind die vielversprechendsten
 
-    @NotNull Maze newInstance();
+    /**
+     * Creates a new instance of a maze implementation.
+     *
+     * @return a newly allocated instance of a maze implementation
+     * @throws InvalidImplementationException if the implementation of {@code Maze} is invalid
+     */
+    @NotNull Maze newInstance() throws InvalidImplementationException;
 
+    /**
+     * Returns the category of this maze
+     *
+     * @return a string representing the {@code mazeCategory}
+     */
     @NotNull String getMazeCategory();
 
+    /**
+     * Returns the name of this maze.
+     *
+     * @return a string representing the {@code mazeName}
+     */
     @NotNull String getMazeName();
 
+    /**
+     * Returns the plugin name of this maze
+     *
+     * @return a string representing the {@code mazePlugin}
+     */
     @NotNull String getMazePlugin();
 
+    /**
+     * Returns a description for this maze
+     *
+     * @return the description in a string
+     */
     @Nullable String getDescription();
 
     // TODO: 10.05.2017 generation methoden hinzufügen
+    void generate(int x, int y) throws IllegalArgumentException;
 }

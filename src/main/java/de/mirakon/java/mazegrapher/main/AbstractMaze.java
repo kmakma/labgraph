@@ -21,14 +21,27 @@ package de.mirakon.java.mazegrapher.main;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * This class provides a skeletal implementation of the {@link Maze} interface, to minimize the effort required to
+ * implement this interface and to lower the risk of errors in the implementation.
+ */
 public abstract class AbstractMaze implements Maze {
 
     public AbstractMaze() {
     }
 
+    /**
+     * Creates a new instance of a maze implementation, by actually calling {@link Class#newInstance()}.
+     * <p>
+     * Note that this method will be called when the implementation is used. An accessible nullary constructor has to be
+     * present for this method to work.
+     *
+     * @return a newly allocated instance of a maze implementation
+     * @throws InvalidImplementationException if no accessible nullary constructor is present
+     */
     @Override
     @NotNull
-    public final Maze newInstance() {
+    public final Maze newInstance() throws InvalidImplementationException {
         try {
             return this.getClass().newInstance();
         } catch (InstantiationException | IllegalAccessException e) {
@@ -36,9 +49,19 @@ public abstract class AbstractMaze implements Maze {
         }
     }
 
+    /**
+     * Returns a description for this maze, by default {@code null}
+     *
+     * @return the description in a string
+     */
     @Override
     @Nullable
     public String getDescription() {
         return null;
+    }
+
+    @Override
+    public void generate(int x, int y) throws IllegalArgumentException {
+
     }
 }
