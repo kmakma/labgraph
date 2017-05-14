@@ -18,7 +18,6 @@
 
 package de.mirakon.java.mazegrapher.main;
 
-import de.mirakon.java.mazegrapher.plugins.DummyMaze;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -60,7 +59,10 @@ public class MazegrapherController {
 
     private ResourceBundle strings;
 
-    private Preferences checkedMazesPrefs;
+    private Preferences settings = Preferences.userNodeForPackage(this.getClass());
+    private Preferences checkedMazesPrefs = Preferences.userRoot().node(Constants.generateExtraPreferencesNodePath
+            (this.getClass(), CHECKEDMAZES_PREF_NODE));
+
     private TreeMap<String, Maze> mazes;
 
     private Set<String> checkedMazes = Collections.synchronizedSet(new HashSet<>());
@@ -90,14 +92,17 @@ public class MazegrapherController {
     public void initialize() {
         try {
             loadStringResources();
-            fetchPreferences();
+            checkSettings();
             fetchMazes();
             populateAccordion();
+
             currentMaze = getRandomMaze();
+            getRandomMazeSize();
+
+            // TODO: 11.05.2017 currentMaze.generate(...)
         } catch (MissingMazeArgumentException | IllegalStateException e) {
             showErrorAlert(strings.getString("error"), strings.getString("errorInitialization"), e.getMessage(), e);
         }
-        // TODO: 19.03.2017 create maze depending on what's choosen, null maze abfangen
 
     }
 
@@ -109,13 +114,14 @@ public class MazegrapherController {
         strings = ResourceBundle.getBundle("Strings");
     }
 
-    private void fetchPreferences() {
-        checkedMazesPrefs = Preferences.userRoot().node(Constants.generateExtraPreferencesNodePath(this.getClass(),
-                CHECKEDMAZES_PREF_NODE));
+    private void checkSettings() {
+        if (!settings.getBoolean(SettingsController.ALL_SETTINGS_SET, false)) {
+            SettingsController.setDefaultSettings();
+        }
     }
 
     private void fetchMazes() throws MissingMazeArgumentException, IllegalStateException {
-        // TODO: 21.03.2017 with plugin, do more :P
+        // TODO: 21.03.2017 with plugin, do more?
         mazes = MazeManager.getDefaultMazePluginMap();
     }
 
@@ -162,6 +168,16 @@ public class MazegrapherController {
         checkMazes();
     }
 
+    @NotNull
+    private TreeMap<String, ArrayList<String>> getMazeNamesByCategory() {
+        TreeMap<String, ArrayList<String>> mazesByCategories = new TreeMap<>();
+        for (Map.Entry<String, Maze> mazeEntry : mazes.entrySet()) {
+            String mCategory = mazeEntry.getValue().getMazeCategory();
+            mazesByCategories.computeIfAbsent(mCategory, k -> new ArrayList<>()).add(mazeEntry.getKey());
+        }
+        return mazesByCategories;
+    }
+
     private String getDescription(String mazeName) {
         return mazes.get(mazeName).getDescription();
     }
@@ -171,16 +187,6 @@ public class MazegrapherController {
             description = strings.getString("descriptionPlaceholder");
         }
         mazeDescription.setText(description);
-    }
-
-    @NotNull
-    private TreeMap<String, ArrayList<String>> getMazeNamesByCategory() {
-        TreeMap<String, ArrayList<String>> mazesByCategories = new TreeMap<>();
-        for (Map.Entry<String, Maze> mazeEntry : mazes.entrySet()) {
-            String mCategory = mazeEntry.getValue().getMazeCategory();
-            mazesByCategories.computeIfAbsent(mCategory, k -> new ArrayList<>()).add(mazeEntry.getKey());
-        }
-        return mazesByCategories;
     }
 
     @SuppressWarnings("unchecked")
@@ -228,45 +234,27 @@ public class MazegrapherController {
 
     @NotNull
     private Maze getRandomMaze() {
-        Maze maze = getRandomMazeInstance();
-        // TODO: 22.03.2017 throw / meldung
-        if (maze == null) {
+        if (checkedMazes.size() == 0) {
+            checkFirstMaze();
         }
-        int[] size = getRandomMazeSize();
-        // TODO: 21.03.2017 maze größen erstellen
-        // TODO: 21.03.2017 maze instanz besorgen und prüfen ob erster maze frei (dann entweder direkt als array oder
-        // maze abspeichern)
-
-        return maze.newInstance();
-    }
-
-    @NotNull
-    private Maze getRandomMazeInstance() {
         String[] checkedMazes = this.checkedMazes.toArray(new String[this.checkedMazes.size()]);
-        String mazeName;
-        if (checkedMazes.length > 0) {
-            mazeName = checkedMazes[ThreadLocalRandom.current().nextInt(checkedMazes.length)];
-        } else {
-            // TODO: 21.03.2017 warnmeldung das keine mazes ausgewählt sind und das erste (mit namen) verwendet wird
-            // TODO: 21.03.2017 get & check first (wirft fehlermeldung falls kein maze gefunden)
-            mazeName = null;
-        }
-        if (mazeName != null) {
-            Maze maze = mazes.get(mazeName);
-            if (maze != null) {
-                // TODO: 21.03.2017 call maze.newInstance stuff
-            } else {
-                // TODO: 21.03.2017 error: konnte maze mit namen xy nicht finden
-            }
-        }
-//        return null;
-        return new DummyMaze();
+        String randomMazeName = checkedMazes[ThreadLocalRandom.current().nextInt(checkedMazes.length)];
+        Maze randomMaze = mazes.get(randomMazeName);
+        return randomMaze.newInstance();
     }
 
     @NotNull
-    private int[] getRandomMazeSize() {
-        // TODO: 22.03.2017 präferenz holen, wenn nicht gefunden standardwerte von irgendwo holen
-        return new int[]{20, 20};
+    private int[] getRandomMazeSize() throws IllegalStateException {
+        int maxXMazeSize = settings.getInt(SettingsController.MAX_X_MAZE_SIZE, -1);
+        int maxYMazeSize = settings.getInt(SettingsController.MAX_Y_MAZE_SIZE, -1);
+        int minXMazeSize = settings.getInt(SettingsController.MIN_X_MAZE_SIZE, -1);
+        int minYMazeSize = settings.getInt(SettingsController.MIN_Y_MAZE_SIZE, -1);
+        if (maxXMazeSize < 0 || maxYMazeSize < 0 || minXMazeSize < 0 || minYMazeSize < 0) {
+            throw new IllegalStateException(strings.getString("errorReadingSettings"));
+        }
+        int xMazeSize = ThreadLocalRandom.current().nextInt(minXMazeSize, maxXMazeSize + 1);
+        int yMazeSize = ThreadLocalRandom.current().nextInt(minYMazeSize, maxYMazeSize + 1);
+        return new int[]{xMazeSize, yMazeSize};
     }
 
     @NotNull
@@ -293,7 +281,9 @@ public class MazegrapherController {
 
         Optional<ButtonType> result = alert.showAndWait();
         if (result.isPresent() && (result.get() == settingsButton)) {
-            // TODO: 01.05.2017 open settings
+            // TODO: 01.05.2017 open settings in new but blocking window, beim beenden von settings soll dies hier
+            // neu geladen werden
+            Platform.exit();
         } else {
             Platform.exit();
         }
