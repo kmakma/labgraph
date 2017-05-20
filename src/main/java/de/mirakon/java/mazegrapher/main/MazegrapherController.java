@@ -156,10 +156,15 @@ public class MazegrapherController {
                 mazesOfCategory.add(mazeItem);
             }
             // Add listener to show description of selected mazeItem
+            // TODO: 20.05.2017 deselect from every other list
             mazeItemListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue)
                     -> {
-                String description = getDescription(newValue.getMazeName());
-                showDescription(description);
+                if (newValue != null) {
+                    String description = getDescription(newValue.getMazeName());
+                    showDescription(description);
+                } else {
+                    showDescription(null);
+                }
             });
             // Add check boxes to the list items
             mazeItemListView.setCellFactory(CheckBoxListCell.forListView(MazeItem::checkedProperty));

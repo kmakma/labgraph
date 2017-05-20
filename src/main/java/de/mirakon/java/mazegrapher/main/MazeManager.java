@@ -47,19 +47,19 @@ public class MazeManager {
 
     @NotNull
     private static TreeMap<String, Maze> putPluginsInMap(@Nullable TreeMap<String, Maze> mazePluginTree,
-                                                         @NotNull ArrayList<Class> plugins) throws
+                                                         @NotNull ArrayList<Class<?>> plugins) throws
             MissingMazeArgumentException, IllegalStateException {
         if (mazePluginTree == null) {
             mazePluginTree = new TreeMap<>();
         }
 
-        Class[] pluginsArray = plugins.stream()
+        Class<?>[] pluginsArray = plugins.stream()
                 .filter(clazz -> !clazz.isInterface())
                 .filter(clazz -> !Modifier.isAbstract(clazz.getModifiers()))
                 .filter(Maze.class::isAssignableFrom)
                 .filter(clazz -> Stream.of(clazz.getConstructors()).anyMatch(constructor -> constructor
                         .getParameterCount() == 0))
-                .toArray(Class[]::new);
+                .toArray(Class<?>[]::new);
 
         Maze[] mazes = new Maze[pluginsArray.length];
         try {
@@ -96,8 +96,8 @@ public class MazeManager {
     }
 
     @NotNull
-    private static ArrayList<Class> getDefaultPlugins() {
-        ArrayList<Class> defaultPlugins = new ArrayList<>();
+    private static ArrayList<Class<?>> getDefaultPlugins() {
+        ArrayList<Class<?>> defaultPlugins = new ArrayList<>();
         defaultPlugins.add(DummyMaze.class);
         defaultPlugins.add(PrimAlgoMazeL2.class);
         return defaultPlugins;
