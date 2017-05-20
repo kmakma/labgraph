@@ -19,7 +19,10 @@
 package de.mirakon.java.mazegrapher.plugins;
 
 import de.mirakon.java.mazegrapher.main.AbstractMaze;
+import de.mirakon.java.mazegrapher.main.GenericCoordinates;
+import de.mirakon.java.mazegrapher.main.Strings;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * A maze of this class is created by using a randomized version of prim's algorithm (sort of creating a minimal
@@ -32,12 +35,8 @@ public class PrimAlgoMazeL2 extends AbstractMaze {
     private static final String mazeName = "PrimAlgoL2";
     private static final String mazePlugin = "default";
 
+    @SuppressWarnings("unused")
     public PrimAlgoMazeL2() {
-
-    }
-
-    private PrimAlgoMazeL2(int i) {
-
     }
 
     @Override
@@ -56,5 +55,25 @@ public class PrimAlgoMazeL2 extends AbstractMaze {
     @NotNull
     public String getMazePlugin() {
         return mazePlugin;
+    }
+
+    @Override
+    public @Nullable String getDescription() {
+        return "This is maze will be created with a randomized version of prim's algorithm.";
+    }
+
+    @Override
+    public void generate(int height, int width) throws IllegalArgumentException {
+        // TODO: 20.05.2017 generate ^^
+        if (height < 3 || width < 3) {
+            throw new IllegalArgumentException(Strings.getString(Strings.ERROR_MAZE_GENERATION_BAD_SIZE, height,
+                    width));
+        }
+        GenericCoordinates[][] maze = new GenericCoordinates[height][width];
+        // TODO: 20.05.2017 befülle maze mit standardzeug
+        // TODO: 20.05.2017 erstes feld zufällig wählen
+        // TODO: 20.05.2017 erste feld zu nodesWithPossibleConnections hinzufügen
+        // TODO: 20.05.2017 findPossibleConnections, und aktualisiere dabei nWPC
+        // TODO: 20.05.2017 wähle connection füg sie hinzu und wiederhole
     }
 }
