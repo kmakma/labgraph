@@ -22,24 +22,24 @@ import java.util.prefs.Preferences;
 
 public class SettingsController {
     public static final String ALL_SETTINGS_SET = "allSettingsSet";
-    public static final String MAX_X_MAZE_SIZE = "maximumXMazeSize";
-    public static final String MAX_Y_MAZE_SIZE = "maximumYMazeSize";
-    public static final String MIN_X_MAZE_SIZE = "minimumXMazeSize";
-    public static final String MIN_Y_MAZE_SIZE = "minimumYMazeSize";
+    public static final String MAX_MAZE_HEIGHT = "maximumMazeHeight";
+    public static final String MAX_MAZE_WIDTH = "maximumMazeWidth";
+    public static final String MIN_MAZE_HEIGHT = "minimumMazeHeight";
+    public static final String MIN_MAZE_WIDTH = "minimumMazeWidth";
 
-    private static final int DEFAULT_MAX_X_MAZE_SIZE = 20;
-    private static final int DEFAULT_MAX_Y_MAZE_SIZE = 20;
-    private static final int DEFAULT_MIN_X_MAZE_SIZE = 10;
-    private static final int DEFAULT_MIN_Y_MAZE_SIZE = 10;
+    private static final int DEFAULT_MAX_MAZE_HEIGHT = 20;
+    private static final int DEFAULT_MAX_MAZE_WIDTH = 20;
+    private static final int DEFAULT_MIN_MAZE_HEIGHT = 10;
+    private static final int DEFAULT_MIN_MAZE_WIDTH = 10;
 
 //    private Preferences settings = Preferences.userNodeForPackage(this.getClass());
 
     public static void setDefaultSettings() {
         Preferences settings = Preferences.userNodeForPackage(SettingsController.class);
-        settings.putInt(MAX_X_MAZE_SIZE, DEFAULT_MAX_X_MAZE_SIZE);
-        settings.putInt(MAX_Y_MAZE_SIZE, DEFAULT_MAX_Y_MAZE_SIZE);
-        settings.putInt(MIN_X_MAZE_SIZE, DEFAULT_MIN_X_MAZE_SIZE);
-        settings.putInt(MIN_Y_MAZE_SIZE, DEFAULT_MIN_Y_MAZE_SIZE);
+        settings.putInt(MAX_MAZE_HEIGHT, DEFAULT_MAX_MAZE_HEIGHT);
+        settings.putInt(MAX_MAZE_WIDTH, DEFAULT_MAX_MAZE_WIDTH);
+        settings.putInt(MIN_MAZE_HEIGHT, DEFAULT_MIN_MAZE_HEIGHT);
+        settings.putInt(MIN_MAZE_WIDTH, DEFAULT_MIN_MAZE_WIDTH);
         settings.putBoolean(ALL_SETTINGS_SET, true);
     }
 }

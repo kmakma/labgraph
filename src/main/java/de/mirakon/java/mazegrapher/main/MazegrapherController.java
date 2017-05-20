@@ -96,10 +96,10 @@ public class MazegrapherController {
             fetchMazes();
             populateAccordion();
 
-            currentMaze = getRandomMaze();
-            getRandomMazeSize();
-
-            // TODO: 11.05.2017 currentMaze.generate(...)
+//            currentMaze = getRandomMaze();
+//            getRandomXMazeSize();
+//            currentMaze.generate(getRandomXMazeSize(), getRandomMazeWidth());
+            // TODO: 18.05.2017 generate in einem thread
         } catch (MissingMazeArgumentException | IllegalStateException e) {
             showErrorAlert(strings.getString("error"), strings.getString("errorInitialization"), e.getMessage(), e);
         }
@@ -115,6 +115,7 @@ public class MazegrapherController {
     }
 
     private void checkSettings() {
+        // TODO: 20.05.2017 when pulling some setting and it doesn't exit set default
         if (!settings.getBoolean(SettingsController.ALL_SETTINGS_SET, false)) {
             SettingsController.setDefaultSettings();
         }
@@ -243,18 +244,22 @@ public class MazegrapherController {
         return randomMaze.newInstance();
     }
 
-    @NotNull
-    private int[] getRandomMazeSize() throws IllegalStateException {
-        int maxXMazeSize = settings.getInt(SettingsController.MAX_X_MAZE_SIZE, -1);
-        int maxYMazeSize = settings.getInt(SettingsController.MAX_Y_MAZE_SIZE, -1);
-        int minXMazeSize = settings.getInt(SettingsController.MIN_X_MAZE_SIZE, -1);
-        int minYMazeSize = settings.getInt(SettingsController.MIN_Y_MAZE_SIZE, -1);
-        if (maxXMazeSize < 0 || maxYMazeSize < 0 || minXMazeSize < 0 || minYMazeSize < 0) {
+    private int getRandomMazeHeight() throws IllegalStateException {
+        int maxMazeHeight = settings.getInt(SettingsController.MAX_MAZE_HEIGHT, -1);
+        int minMazeHeight = settings.getInt(SettingsController.MIN_MAZE_HEIGHT, -1);
+        if (maxMazeHeight < 1 || minMazeHeight < 1) {
             throw new IllegalStateException(strings.getString("errorReadingSettings"));
         }
-        int xMazeSize = ThreadLocalRandom.current().nextInt(minXMazeSize, maxXMazeSize + 1);
-        int yMazeSize = ThreadLocalRandom.current().nextInt(minYMazeSize, maxYMazeSize + 1);
-        return new int[]{xMazeSize, yMazeSize};
+        return ThreadLocalRandom.current().nextInt(minMazeHeight, maxMazeHeight + 1);
+    }
+
+    private int getRandomMazeWidth() throws IllegalStateException {
+        int maxMazeWidth = settings.getInt(SettingsController.MAX_MAZE_WIDTH, -1);
+        int minMazeWidth = settings.getInt(SettingsController.MIN_MAZE_WIDTH, -1);
+        if (maxMazeWidth < 1 || minMazeWidth < 1) {
+            throw new IllegalStateException(strings.getString("errorReadingSettings"));
+        }
+        return ThreadLocalRandom.current().nextInt(minMazeWidth, maxMazeWidth + 1);
     }
 
     @NotNull
