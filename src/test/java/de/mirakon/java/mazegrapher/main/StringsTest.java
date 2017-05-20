@@ -53,22 +53,11 @@ public class StringsTest {
         String value = "string for given key";
         Deencapsulation.setField(Strings.class, "strings", mockedStrings);
 
-        new Expectations(Strings.class) {
-            {
-                Deencapsulation.invoke(Strings.class, "loadStringResources");
-                times = 0;
-                mockedStrings.getString(key);
-                result = value;
-                times = 1;
-            }
-        };
+        new StringsTestExpectations(key, value, 0, 1);
 
         String result = Strings.getString(key);
         assertThat(result, is(value));
     }
-
-//    class MyExpectations extends Expectations {
-//        MyExpectations()
 
     /**
      * {@link Strings#getString(String)}
@@ -109,25 +98,30 @@ public class StringsTest {
         String value = "string for given key";
         Deencapsulation.setField(Strings.class, "strings", mockedStrings);
 
-        new Expectations(Strings.class) {
-            {
-                Deencapsulation.invoke(Strings.class, "loadStringResources");
-                times = 0;
-                mockedStrings.getString(key);
-                result = e;
-                times = 1;
-            }
-        };
+        new StringsTestExpectations(key, e, 0, 1);
 
         expectedException.expect(is(e));
 
         Strings.getString(key);
     }
 
-
     @Test
     public void getStringKeyAndValuesV1() throws Exception {
 
+    }
+
+    private final class StringsTestExpectations extends Expectations {
+        StringsTestExpectations(String key, Object value, int loadStringResourcesTimes, int
+                getStringTimes) {
+            super(Strings.class);
+            {
+                Deencapsulation.invoke(Strings.class, "loadStringResources");
+                times = loadStringResourcesTimes;
+                mockedStrings.getString(key);
+                result = value;
+                times = getStringTimes;
+            }
+        }
     }
 
 }
