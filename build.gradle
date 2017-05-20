@@ -22,12 +22,14 @@ repositories {
     mavenCentral()
 }
 
-manifest {
-    attributes(
-            'Implementation-Title': 'MazeGrapher',
-            'Implementation-Version': version,
-            'Main-Class': mainClassName
-    )
+jar {
+    manifest {
+        attributes(
+                'Implementation-Title': 'MazeGrapher',
+                'Implementation-Version': version,
+                'Main-Class': mainClassName
+        )
+    }
 }
 
 javadoc {

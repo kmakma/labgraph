@@ -14,6 +14,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 import java.util.ResourceBundle;
@@ -31,6 +32,7 @@ public class MainApp extends Application {
         MazegrapherController controller = loader.getController();
         controller.setStageListeners(stage);
 
+        stage.getIcons().add(new Image("icon.png"));
         stage.setTitle("MazeGrapher");
         stage.setScene(new Scene(mainMazeParent));
         // TODO: 17.03.2017 setMinHeight/~Width
