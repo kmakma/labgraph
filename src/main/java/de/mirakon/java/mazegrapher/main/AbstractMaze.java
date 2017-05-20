@@ -61,7 +61,7 @@ public abstract class AbstractMaze implements Maze {
     }
 
     @Override
-    public void generate(int x, int y) throws IllegalArgumentException {
-
+    public void generate(int height, int width) throws IllegalArgumentException {
+        // TODO: 20.05.2017 do not override this
     }
 }

@@ -66,6 +66,14 @@ public interface Maze {
      */
     @Nullable String getDescription();
 
-    // TODO: 10.05.2017 generation methoden hinzufügen
-    void generate(int x, int y) throws IllegalArgumentException;
+    /**
+     * Generates a maze with the maximum size, walls around included, as specified by parameters. Since some maze
+     * generation algorithms cannot handle even or odd sizes the accessible part of the maze might be smaller than
+     * expected.
+     *
+     * @param height of the maze, walls on both sides included
+     * @param width  of the maze, walls on both sides included
+     * @throws IllegalArgumentException if sizes are negative or to small
+     */
+    void generate(int height, int width) throws IllegalArgumentException;
 }
