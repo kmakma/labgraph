@@ -76,4 +76,6 @@ public interface Maze {
      * @throws IllegalArgumentException if sizes are negative or to small
      */
     void generate(int height, int width) throws IllegalArgumentException;
+
+    // TODO: 22.05.2017 add optional method "performanceTest"
 }

@@ -46,8 +46,7 @@
                             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
                         </rowConstraints>
                     </GridPane>
-                    <Button mnemonicParsing="false" text="%generate">
-                    </Button>
+                    <Button mnemonicParsing="false" onAction="#generateActionMViewer" text="%generate"/>
                 </VBox>
             </Tab>
             <Tab text="%mazeRunner">

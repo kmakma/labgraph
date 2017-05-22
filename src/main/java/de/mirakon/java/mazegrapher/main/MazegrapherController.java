@@ -24,6 +24,7 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
@@ -49,23 +50,19 @@ import static javafx.scene.control.ButtonBar.ButtonData;
 
 public class MazegrapherController {
 
-    public static final String CHECKEDMAZES_PREF_NODE = "checkedmazes";
+    // TODO: 22.05.2017 performance test /z.b. für mazes, mit 300x300 mazes
 
+    public static final String CHECKEDMAZES_PREF_NODE = "checkedmazes";
+    private final Set<String> checkedMazes = Collections.synchronizedSet(new HashSet<>());
     @FXML
     private Accordion accordionMazes;
-
     @FXML
     private TextArea mazeDescription;
-
     private ResourceBundle strings;
-
     private Preferences settings = Preferences.userNodeForPackage(this.getClass());
     private Preferences checkedMazesPrefs = Preferences.userRoot().node(Constants.generateExtraPreferencesNodePath
             (this.getClass(), CHECKEDMAZES_PREF_NODE));
-
     private TreeMap<String, Maze> mazes;
-
-    private Set<String> checkedMazes = Collections.synchronizedSet(new HashSet<>());
     private Maze currentMaze;
 
     void setStageListeners(@NotNull Stage stage) {
@@ -81,10 +78,12 @@ public class MazegrapherController {
             getAlert(AlertType.WARNING, strings.getString("warning"), null, strings.getString
                     ("warningPrefClearCheckedMazesContent"), e).show();
         }
-        for (String mazeName : checkedMazes) {
-            Maze checkedMaze = mazes.get(mazeName);
-            if (checkedMaze != null) {
-                checkedMazesPrefs.put(mazeName, checkedMaze.getMazeCategory());
+        synchronized (checkedMazes) {
+            for (String mazeName : checkedMazes) {
+                Maze checkedMaze = mazes.get(mazeName);
+                if (checkedMaze != null) {
+                    checkedMazesPrefs.put(mazeName, checkedMaze.getMazeCategory());
+                }
             }
         }
     }
@@ -143,13 +142,15 @@ public class MazegrapherController {
             for (String mazeName : mazeCategory.getValue()) {
                 MazeItem mazeItem = new MazeItem(mazeName, false);
                 mazeItem.checkedProperty().addListener((obs, wasChecked, isNowChecked) -> {
-                    if (isNowChecked) {
-                        checkedMazes.add(mazeItem.getMazeName());
-                    } else {
-                        checkedMazes.remove(mazeItem.getMazeName());
-                        if (checkedMazes.size() == 0) {
-                            getAlert(AlertType.WARNING, strings.getString("warning"), null, strings.getString
-                                    ("warningNoCheckedMazesContent"), null).showAndWait();
+                    synchronized (checkedMazes) {
+                        if (isNowChecked) {
+                            checkedMazes.add(mazeItem.getMazeName());
+                        } else {
+                            checkedMazes.remove(mazeItem.getMazeName());
+                            if (checkedMazes.size() == 0) {
+                                getAlert(AlertType.WARNING, strings.getString("warning"), null, strings.getString
+                                        ("warningNoCheckedMazesContent"), null).showAndWait();
+                            }
                         }
                     }
                 });
@@ -240,11 +241,14 @@ public class MazegrapherController {
 
     @NotNull
     private Maze getRandomMaze() {
-        if (checkedMazes.size() == 0) {
-            checkFirstMaze();
+        String[] checkedMazesArray;
+        synchronized (checkedMazes) {
+            if (checkedMazes.size() == 0) {
+                checkFirstMaze();
+            }
+            checkedMazesArray = checkedMazes.toArray(new String[this.checkedMazes.size()]);
         }
-        String[] checkedMazes = this.checkedMazes.toArray(new String[this.checkedMazes.size()]);
-        String randomMazeName = checkedMazes[ThreadLocalRandom.current().nextInt(checkedMazes.length)];
+        String randomMazeName = checkedMazesArray[ThreadLocalRandom.current().nextInt(checkedMazesArray.length)];
         Maze randomMaze = mazes.get(randomMazeName);
         return randomMaze.newInstance();
     }
@@ -321,6 +325,11 @@ public class MazegrapherController {
         expContent.getChildren().addAll(label, textArea);
 
         return expContent;
+    }
+
+    @FXML
+    private void generateActionMViewer(ActionEvent actionEvent) {
+        // TODO: 22.05.2017 create a thead, and stuff happens
     }
 
     private static class MazeItem {
