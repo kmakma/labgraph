@@ -11,12 +11,15 @@
 package de.mirakon.java.mazegrapher.plugins;
 
 import de.mirakon.java.mazegrapher.main.AbstractMaze;
+import de.mirakon.java.mazegrapher.main.Strings;
 import org.jetbrains.annotations.NotNull;
 
 public class DummyMaze extends AbstractMaze {
 
     private static final String MAZE_NAME = "Dummy Maze";
     private static final String MAZE_CATEGORY = "Dummy Mazes";
+
+    private boolean[][] maze;
 
     public DummyMaze() {
         super();
@@ -38,5 +41,24 @@ public class DummyMaze extends AbstractMaze {
     @NotNull
     public String getMazePlugin() {
         return "default";
+    }
+
+    @Override
+    public void generate(int height, int width) throws IllegalArgumentException {
+        if (height < 3 || width < 3) {
+            throw new IllegalArgumentException(Strings.getString(Strings.ERROR_MAZE_GENERATION_BAD_SIZE, height,
+                    width));
+        }
+
+        maze = new boolean[height][width];
+
+        // 1. schachbrett erzeugen
+        // 2. rand schwarz machen
+        // 1|1 soll weiß sein
+
+        // true = weiß
+        // false = schwarz
+        // rand ist schwarz
+
     }
 }
