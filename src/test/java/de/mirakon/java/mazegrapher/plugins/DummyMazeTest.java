@@ -18,12 +18,17 @@
 
 package de.mirakon.java.mazegrapher.plugins;
 
+import de.mirakon.java.mazegrapher.main.Strings;
+import mockit.Deencapsulation;
+import mockit.Expectations;
+import mockit.Mocked;
 import mockit.Tested;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import static org.junit.Assert.*;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.Is.is;
 
 /**
  * Created by RACEMAT on his birthday 2017.
@@ -32,23 +37,108 @@ import static org.junit.Assert.*;
 public class DummyMazeTest {
 
     @Tested
-    DummyMaze tested;
+    private DummyMaze tested;
 
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
 
+    @Mocked
+    private Strings strings;
+
     @Test
     public void generateWithException1() throws Exception {
+        new StringsExpectations();
+
         expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("bloop");
 
         tested.generate(2, 5);
     }
 
     @Test
     public void generateWithException2() throws Exception {
+        new StringsExpectations();
+
         expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("bloop");
 
         tested.generate(20, 1);
     }
 
+    @Test
+    public void generate3x3() throws Exception {
+
+        boolean[][] matrix = new boolean[][]{
+                {false, false, false},
+                {false, true, false},
+                {false, false, false}
+        };
+
+        tested.generate(3, 3);
+
+        boolean[][] result = Deencapsulation.getField(tested, "maze");
+
+        assertThat(result.length, is(3));
+        assertThat(result[0].length, is(3));
+
+        assertThat(result[0], is(matrix[0]));
+        assertThat(result[1], is(matrix[1]));
+        assertThat(result[2], is(matrix[2]));
+    }
+
+    @Test
+    public void generate4x4() throws Exception {
+
+        boolean[][] matrix = new boolean[][]{
+                {false, false, false, false},
+                {false, true, false, false},
+                {false, false, true, false},
+                {false, false, false, false}
+        };
+
+        tested.generate(4, 4);
+
+        boolean[][] result = Deencapsulation.getField(tested, "maze");
+
+        assertThat(result.length, is(4));
+        assertThat(result[0].length, is(4));
+
+        assertThat(result[0], is(matrix[0]));
+        assertThat(result[1], is(matrix[1]));
+        assertThat(result[2], is(matrix[2]));
+        assertThat(result[3], is(matrix[3]));
+    }
+
+    @Test
+    public void generate5x5() throws Exception {
+
+        boolean[][] matrix = new boolean[][]{
+                {false, false, false, false, false},
+                {false, true, false, true, false},
+                {false, false, true, false, false},
+                {false, true, false, true, false},
+                {false, false, false, false, false}
+        };
+
+        tested.generate(5, 5);
+
+        boolean[][] result = Deencapsulation.getField(tested, "maze");
+
+        assertThat(result.length, is(5));
+        assertThat(result[0].length, is(5));
+
+        assertThat(result[0], is(matrix[0]));
+        assertThat(result[1], is(matrix[1]));
+        assertThat(result[2], is(matrix[2]));
+        assertThat(result[3], is(matrix[3]));
+        assertThat(result[4], is(matrix[4]));
+    }
+
+    private final class StringsExpectations extends Expectations {
+        StringsExpectations() {
+            super();
+            Strings.getString(anyString, anyInt, anyInt);
+            result = "bloop";
+        }
+    }
 }
