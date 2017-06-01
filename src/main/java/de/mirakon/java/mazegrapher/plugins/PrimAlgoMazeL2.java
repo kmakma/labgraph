@@ -24,9 +24,7 @@ import de.mirakon.java.mazegrapher.main.Strings;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -72,28 +70,34 @@ public class PrimAlgoMazeL2 extends AbstractMaze {
 
     @Override
     public void generate(int height, int width) throws IllegalArgumentException {
-        // TODO: 20.05.2017 generate ^^
+        // TODO: 20.05.2017 sachen "outsourcen"
         if (height < 3 || width < 3) {
             throw new IllegalArgumentException(Strings.getString(Strings.ERROR_MAZE_GENERATION_BAD_SIZE, height,
                     width));
         }
         this.height = height;
         this.width = width;
-        Map<Coordinates, Boolean> mazes = new HashMap<>();
-
-        // TODO: 20.05.2017 befülle maze mit standardzeug
-        for (int i = 0; i < height; i++) {
-            for (int j = 0; j < width; j++) {
-                // TODO: 21.05.2017 create walls everywhere
-            }
-        }
+        boolean[][] maze = new boolean[height][width];
 
         // TODO: 20.05.2017 erstes feld zufällig wählen
         int zufX = ThreadLocalRandom.current().nextInt(1, height - 1);
         int zufY = ThreadLocalRandom.current().nextInt(1, width - 1);
+        if (zufX % 2 == 0) {
+            zufX--;
+        }
+        if (zufY % 2 == 0) {
+            zufY--;
+        }
+
+        maze[zufX][zufY] = true;
+
         Set<Coordinates> coordinatesWithPossibleConnections = new HashSet<>();
-        // TODO: 20.05.2017 erste feld zu nodesWithPossibleConnections hinzufügen
-        // TODO: 20.05.2017 findPossibleConnections, und aktualisiere dabei nWPC
+
+        coordinatesWithPossibleConnections.add(new Coordinates(zufX, zufY));
+
+        // TODO: 20.05.2017 findPossibleConnections, und aktualisiere dabei cWPC
         // TODO: 20.05.2017 wähle connection füg sie hinzu und wiederhole
+        // TODO: 22.05.2017 try multithreading with:
+        // a) thread.count = 1; b) thread.count = core.count; c) thread.count = n * core.count
     }
 }
