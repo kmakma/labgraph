@@ -66,9 +66,7 @@ public class MazegrapherController {
     private Maze currentMaze;
 
     void setStageListeners(@NotNull Stage stage) {
-        stage.setOnCloseRequest(event -> {
-            saveCheckedMazes();
-        });
+        stage.setOnCloseRequest(event -> saveCheckedMazes());
     }
 
     private void saveCheckedMazes() {
