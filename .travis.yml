@@ -15,3 +15,5 @@ cache:
   directories:
     - $HOME/.gradle/caches/
     - $HOME/.gradle/wrapper/
+notifications:
+  webhooks: https://discordapp.com/api/webhooks/322433178260340747/Yqtx9TPJKfgCN5JnAV2oMSF6Zzo5-WGkfMGP2Knb28PJeqcgQ06zIAP4Jqta6hNr6NOb
