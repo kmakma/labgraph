@@ -78,4 +78,5 @@ public interface Maze {
     void generate(int height, int width) throws IllegalArgumentException;
 
     // TODO: 22.05.2017 add optional method "performanceTest"
+    // TODO: 15.06.2017 get maze method (boolean array [width][height], false = wall, true = path)
 }

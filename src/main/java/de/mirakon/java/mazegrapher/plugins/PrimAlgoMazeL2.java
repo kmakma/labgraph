@@ -24,7 +24,9 @@ import de.mirakon.java.mazegrapher.main.Strings;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -77,27 +79,66 @@ public class PrimAlgoMazeL2 extends AbstractMaze {
         }
         this.height = height;
         this.width = width;
-        boolean[][] maze = new boolean[height][width];
+        boolean[][] maze = new boolean[width][height];
 
-        // TODO: 20.05.2017 erstes feld zufällig wählen
-        int zufX = ThreadLocalRandom.current().nextInt(1, height - 1);
-        int zufY = ThreadLocalRandom.current().nextInt(1, width - 1);
+        // TODO: 20.05.2017 erstes feld zufällig wählen, variablennamen -> englisch
+        int zufX = ThreadLocalRandom.current().nextInt(1, width - 1);
+        int zufY = ThreadLocalRandom.current().nextInt(1, height - 1);
         if (zufX % 2 == 0) {
             zufX--;
         }
         if (zufY % 2 == 0) {
             zufY--;
         }
-
         maze[zufX][zufY] = true;
-
         Set<Coordinates> coordinatesWithPossibleConnections = new HashSet<>();
-
         coordinatesWithPossibleConnections.add(new Coordinates(zufX, zufY));
 
-        // TODO: 20.05.2017 findPossibleConnections, und aktualisiere dabei cWPC
+        // TODO: 20.05.2017 findPossibleConnections (anhand cWPC), und aktualisiere dabei cWPC
+        Iterator<Coordinates> iterator = coordinatesWithPossibleConnections.iterator();
+        ArrayList<Coordinates> possibleConnections = new ArrayList<>();
+        while (iterator.hasNext()) {
+            Coordinates coordinates = iterator.next();
+            int possibleConnectionsSize = possibleConnections.size();
+            // check if there's any possible connection
+            if (coordinates.getX() >= 3 && !maze[coordinates.getX() - 2][coordinates.getY()]) {
+                possibleConnections.add(new Coordinates(coordinates.getX() - 1, coordinates.getY()));
+            }
+            if (coordinates.getX() < width - 3 && !maze[coordinates.getX() + 2][coordinates.getY()]) {
+                possibleConnections.add(new Coordinates(coordinates.getX() + 1, coordinates.getY()));
+            }
+            if (coordinates.getY() >= 3 && !maze[coordinates.getX()][coordinates.getY() - 2]) {
+                possibleConnections.add(new Coordinates(coordinates.getX(), coordinates.getY() - 1));
+            }
+            if (coordinates.getY() < height - 3 && !maze[coordinates.getX()][coordinates.getY() + 2]) {
+                possibleConnections.add(new Coordinates(coordinates.getX(), coordinates.getY() + 1));
+            }
+            // delete coordinates from coordinatesWithPossibleConnections
+            if (possibleConnectionsSize == possibleConnections.size()) {
+                iterator.remove();
+            }
+        }
+
         // TODO: 20.05.2017 wähle connection füg sie hinzu und wiederhole
+        Coordinates connectionCoordinates = possibleConnections.get(ThreadLocalRandom.current().nextInt(0,
+                possibleConnections.size()));
+        Coordinates coordinates1;
+        Coordinates coordinates2;
+        if (connectionCoordinates.getX() % 2 == 0) {
+            // connection is vertical
+            coordinates1 = new Coordinates(connectionCoordinates.getX(), connectionCoordinates.getY() + 1);
+            coordinates2 = new Coordinates(connectionCoordinates.getX(), connectionCoordinates.getY() - 1);
+        } else {
+            // connection is horizontal
+            coordinates1 = new Coordinates(connectionCoordinates.getX() + 1, connectionCoordinates.getY());
+            coordinates2 = new Coordinates(connectionCoordinates.getX() - 1, connectionCoordinates.getY());
+        }
+        maze[connectionCoordinates.getX()][connectionCoordinates.getY()] = true;
+        maze[coordinates1.getX()][coordinates1.getY()] = true;
+        maze[coordinates2.getX()][coordinates2.getY()] = true;
+        coordinatesWithPossibleConnections.add(coordinates1);
+        coordinatesWithPossibleConnections.add(coordinates2);
         // TODO: 22.05.2017 try multithreading with:
-        // a) thread.count = 1; b) thread.count = core.count; c) thread.count = n * core.count
+        // TODO: 22.05.2017 a) thread.count = 1; b) thread.count = core.count; c) thread.count = n * core.count
     }
 }

@@ -57,14 +57,17 @@ public class DummyMaze extends AbstractMaze {
             throw new IllegalArgumentException(Strings.getString(Strings.ERROR_MAZE_GENERATION_BAD_SIZE, height,
                     width));
         }
-        maze = new boolean[height][width];
-        for (int i = 0; i < maze.length; i++) {
-            for (int j = 0; j < maze[0].length; j++) {
-                // make edges black
-                if (i == 0 || j == 0 || i == maze.length - 1 || j == maze[0].length - 1) {
-                    maze[i][j] = false;
+        maze = new boolean[width][height];
+        for (int x = 0; x < maze.length; x++) {
+            for (int y = 0; y < maze[0].length; y++) {
+                //noinspection SimplifiableIfStatement
+                if (x == 0 || y == 0 || x == maze.length - 1 || y == maze[0].length - 1) {
+                    // make edges black
+                    maze[x][y] = false;
+                } else {
                     // make pattern
-                } else maze[i][j] = (i + j) % 2 == 0;
+                    maze[x][y] = (x + y) % 2 == 0;
+                }
             }
         }
     }
