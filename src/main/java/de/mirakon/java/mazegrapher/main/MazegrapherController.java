@@ -239,14 +239,13 @@ public class MazegrapherController {
 
     @NotNull
     private Maze getRandomMaze() {
-        String[] checkedMazesArray;
+        String randomMazeName;
         synchronized (checkedMazes) {
             if (checkedMazes.size() == 0) {
                 checkFirstMaze();
             }
-            checkedMazesArray = checkedMazes.toArray(new String[this.checkedMazes.size()]);
+            randomMazeName = GenericMethods.getElementXFromSet(checkedMazes, ThreadLocalRandom.current().nextInt(checkedMazes.size()));
         }
-        String randomMazeName = checkedMazesArray[ThreadLocalRandom.current().nextInt(checkedMazesArray.length)];
         Maze randomMaze = mazes.get(randomMazeName);
         return randomMaze.newInstance();
     }
