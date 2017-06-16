@@ -89,7 +89,7 @@ public class PrimAlgoMazeL2 extends AbstractMaze {
         }
         this.height = height;
         this.width = width;
-        maze = new boolean[width][height];
+        maze = new boolean[height][width];
 
         // coordinatesWithPossibleConnections are coordinates of intersections which might connect to a new intersection
         Set<Coordinates> coordinatesWithPossibleConnections = new HashSet<>();
@@ -117,7 +117,7 @@ public class PrimAlgoMazeL2 extends AbstractMaze {
         if (ranY % 2 == 0) {
             ranY--;
         }
-        maze[ranX][ranY] = true;
+        maze[ranY][ranX] = true;
         return new Coordinates(ranX, ranY);
     }
 
@@ -131,16 +131,16 @@ public class PrimAlgoMazeL2 extends AbstractMaze {
             Coordinates coordinates = iterator.next();
             int possibleConnectionsSize = possibleConnections.size();
             // check if there's any possible connection
-            if (coordinates.getX() >= 3 && !maze[coordinates.getX() - 2][coordinates.getY()]) {
+            if (coordinates.getX() >= 3 && !maze[coordinates.getY()][coordinates.getX() - 2]) {
                 possibleConnections.add(new Coordinates(coordinates.getX() - 1, coordinates.getY()));
             }
-            if (coordinates.getX() < width - 3 && !maze[coordinates.getX() + 2][coordinates.getY()]) {
+            if (coordinates.getX() < width - 3 && !maze[coordinates.getY()][coordinates.getX() + 2]) {
                 possibleConnections.add(new Coordinates(coordinates.getX() + 1, coordinates.getY()));
             }
-            if (coordinates.getY() >= 3 && !maze[coordinates.getX()][coordinates.getY() - 2]) {
+            if (coordinates.getY() >= 3 && !maze[coordinates.getY() - 2][coordinates.getX()]) {
                 possibleConnections.add(new Coordinates(coordinates.getX(), coordinates.getY() - 1));
             }
-            if (coordinates.getY() < height - 3 && !maze[coordinates.getX()][coordinates.getY() + 2]) {
+            if (coordinates.getY() < height - 3 && !maze[coordinates.getY() + 2][coordinates.getX()]) {
                 possibleConnections.add(new Coordinates(coordinates.getX(), coordinates.getY() + 1));
             }
             // delete coordinates from coordinatesWithPossibleConnections
@@ -164,9 +164,9 @@ public class PrimAlgoMazeL2 extends AbstractMaze {
             startCoordinates = new Coordinates(connectionCoordinates.getX() + 1, connectionCoordinates.getY());
             endCoordinates = new Coordinates(connectionCoordinates.getX() - 1, connectionCoordinates.getY());
         }
-        maze[connectionCoordinates.getX()][connectionCoordinates.getY()] = true;
-        maze[startCoordinates.getX()][startCoordinates.getY()] = true;
-        maze[endCoordinates.getX()][endCoordinates.getY()] = true;
+        maze[connectionCoordinates.getY()][connectionCoordinates.getX()] = true;
+        maze[startCoordinates.getY()][startCoordinates.getX()] = true;
+        maze[endCoordinates.getY()][endCoordinates.getX()] = true;
         coordinatesWithPossibleConnections.add(startCoordinates);
         coordinatesWithPossibleConnections.add(endCoordinates);
     }

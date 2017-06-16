@@ -67,16 +67,16 @@ public class DummyMaze extends AbstractMaze {
                     width));
         }
 
-        maze = new boolean[width][height];
-        for (int x = 0; x < maze.length; x++) {
-            for (int y = 0; y < maze[0].length; y++) {
+        maze = new boolean[height][width];
+        for (int y = 0; y < maze.length; y++) {
+            for (int x = 0; x < maze[0].length; x++) {
                 //noinspection SimplifiableIfStatement
-                if (x == 0 || y == 0 || x == maze.length - 1 || y == maze[0].length - 1) {
+                if (y == 0 || x == 0 || y == maze.length - 1 || x == maze[0].length - 1) {
                     // make edges black
-                    maze[x][y] = false;
+                    maze[y][x] = false;
                 } else {
                     // make pattern
-                    maze[x][y] = (x + y) % 2 == 0;
+                    maze[y][x] = (y + x) % 2 == 0;
                 }
             }
         }
