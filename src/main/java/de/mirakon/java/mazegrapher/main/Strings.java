@@ -27,12 +27,18 @@ import java.util.ResourceBundle;
 public class Strings {
 
     /**
-     * The key to the string: "{@code Tried to create a maze with an illegal size; height: {0}, width: {1}!}" with
+     * A {@link ResourceBundle} key to the string: "{@code Tried to create a maze with an illegal size; height: {0}, width: {1}!}" with
      * {@code {0}} and {@code {1}} being placeholders for the corresponding values.
      * <p>
      * Use {@link Strings#getString(String, Object...)} with desired values for best effect.
      */
     public static final String ERROR_MAZE_GENERATION_BAD_SIZE = "errorMazeGenerationBadSize";
+    /**
+     * A {@link ResourceBundle} key to the string: "{@code Cannot access maze because it isn't generated yet!}"
+     * <p>
+     * Use {@link Strings#getString(String)} for best effect.
+     */
+    public static final String ERROR_MAZE_NOT_GENERATED = "errorMazeNotGenerated";
 
     private static ResourceBundle strings;
 

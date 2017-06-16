@@ -36,35 +36,48 @@ public interface Maze {
      * @return a newly allocated instance of a maze implementation
      * @throws InvalidImplementationException if the implementation of {@code Maze} is invalid
      */
-    @NotNull Maze newInstance() throws InvalidImplementationException;
+    @NotNull
+    Maze newInstance() throws InvalidImplementationException;
 
     /**
      * Returns the category of this maze
      *
      * @return a string representing the {@code mazeCategory}
      */
-    @NotNull String getMazeCategory();
+    @NotNull
+    String getMazeCategory();
 
     /**
      * Returns the name of this maze.
      *
      * @return a string representing the {@code mazeName}
      */
-    @NotNull String getMazeName();
+    @NotNull
+    String getMazeName();
 
     /**
      * Returns the plugin name of this maze
      *
      * @return a string representing the {@code mazePlugin}
      */
-    @NotNull String getMazePlugin();
+    @NotNull
+    String getMazePlugin();
 
     /**
      * Returns a description for this maze
      *
      * @return the description in a string
      */
-    @Nullable String getDescription();
+    @Nullable
+    String getDescription();
+
+    /**
+     * Returns a two dimensional boolean array representing this maze
+     *
+     * @return a boolean array with {@code [width][height]} and {@code true} equals path, {@code false} equals wall
+     */
+    @NotNull
+    boolean[][] getMaze();
 
     /**
      * Generates a maze with the maximum size, walls around included, as specified by parameters. Since some maze

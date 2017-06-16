@@ -67,8 +67,18 @@ public class PrimAlgoMazeL2 extends AbstractMaze {
     }
 
     @Override
-    public @Nullable String getDescription() {
+    @Nullable
+    public String getDescription() {
         return "This is maze will be created with a randomized version of prim's algorithm.";
+    }
+
+    @Override
+    @NotNull
+    public boolean[][] getMaze() throws IllegalStateException {
+        if(maze==null) {
+            throw new IllegalStateException(Strings.getString(Strings.ERROR_MAZE_NOT_GENERATED));
+        }
+        return maze;
     }
 
     @Override
@@ -116,6 +126,7 @@ public class PrimAlgoMazeL2 extends AbstractMaze {
                                                                    coordinatesWithPossibleConnections) {
         Iterator<Coordinates> iterator = coordinatesWithPossibleConnections.iterator();
         ArrayList<Coordinates> possibleConnections = new ArrayList<>();
+
         while (iterator.hasNext()) {
             Coordinates coordinates = iterator.next();
             int possibleConnectionsSize = possibleConnections.size();

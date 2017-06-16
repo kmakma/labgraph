@@ -52,11 +52,21 @@ public class DummyMaze extends AbstractMaze {
     }
 
     @Override
+    @NotNull
+    public boolean[][] getMaze() {
+        if(maze==null) {
+            throw new IllegalStateException(Strings.getString(Strings.ERROR_MAZE_NOT_GENERATED));
+        }
+        return maze;
+    }
+
+    @Override
     public void generate(int height, int width) throws IllegalArgumentException {
         if (height < 3 || width < 3) {
             throw new IllegalArgumentException(Strings.getString(Strings.ERROR_MAZE_GENERATION_BAD_SIZE, height,
                     width));
         }
+
         maze = new boolean[width][height];
         for (int x = 0; x < maze.length; x++) {
             for (int y = 0; y < maze[0].length; y++) {

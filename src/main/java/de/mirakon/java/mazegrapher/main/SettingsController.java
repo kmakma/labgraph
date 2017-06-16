@@ -21,6 +21,7 @@ package de.mirakon.java.mazegrapher.main;
 import java.util.prefs.Preferences;
 
 public class SettingsController {
+    // TODO: 16.06.2017 export settings constants to enum
     public static final String ALL_SETTINGS_SET = "allSettingsSet";
     public static final String MAX_MAZE_HEIGHT = "maximumMazeHeight";
     public static final String MAX_MAZE_WIDTH = "maximumMazeWidth";

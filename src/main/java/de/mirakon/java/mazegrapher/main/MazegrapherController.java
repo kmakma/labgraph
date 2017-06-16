@@ -63,7 +63,6 @@ public class MazegrapherController {
     private Preferences checkedMazesPrefs = Preferences.userRoot().node(Constants.generateExtraPreferencesNodePath
             (this.getClass(), CHECKEDMAZES_PREF_NODE));
     private TreeMap<String, Maze> mazes;
-    private Maze currentMaze;
 
     void setStageListeners(@NotNull Stage stage) {
         stage.setOnCloseRequest(event -> saveCheckedMazes());
@@ -112,7 +111,8 @@ public class MazegrapherController {
     }
 
     private void checkSettings() {
-        // TODO: 20.05.2017 when pulling some setting and it doesn't exit set default
+        // TODO: 20.05.2017 when pulling some setting and it doesn't exist set default
+        // FIXME: 16.06.2017 #settings, prüfe welche settings nicht gesetzt sind und setzte diese
         if (!settings.getBoolean(SettingsController.ALL_SETTINGS_SET, false)) {
             SettingsController.setDefaultSettings();
         }
@@ -247,8 +247,7 @@ public class MazegrapherController {
             randomMazeName = GenericMethods.getElementXFromSet(checkedMazes, ThreadLocalRandom.current().nextInt
                     (checkedMazes.size()));
         }
-        Maze randomMaze = mazes.get(randomMazeName);
-        return randomMaze.newInstance();
+        return mazes.get(randomMazeName).newInstance();
     }
 
     private int getRandomMazeHeight() throws IllegalStateException {
@@ -325,15 +324,18 @@ public class MazegrapherController {
         return expContent;
     }
 
-    @FXML
-    private void generateActionMViewer(ActionEvent actionEvent) {
-        // TODO: 16.06.2017 some loading animation
-        // TODO: 22.05.2017 create a thead, and stuff happens
-        // TODO: 16.06.2017 get random sizes
-        // TODO: 16.06.2017 get random maze
-        // TODO: 16.06.2017 generate maze
-        // TODO: 16.06.2017 get result
+    private void showMazeInMV(@NotNull boolean[][] maze) {
         // TODO: 16.06.2017 display result
+    }
+
+    @FXML
+    private void generateActionMViewer(ActionEvent actionEvent) throws IllegalStateException {
+        // TODO: 16.06.2017 add some loading animation (with status und zeug)
+        // TODO: 22.05.2017 create a thread
+        Maze maze = getRandomMaze();
+        // TODO: 16.06.2017 cathc illegalArgumentExc und IllegalStateException und wirf ne warnung oder ein fehler
+        maze.generate(getRandomMazeHeight(), getRandomMazeWidth());
+        showMazeInMV(maze.getMaze()); // TODO: 16.06.2017 catch IllegalState with error
         // TODO: 16.06.2017 wenn diese methode aufgerufen wird während gearbeitet frag ob abgebrochen werden soll
     }
 
