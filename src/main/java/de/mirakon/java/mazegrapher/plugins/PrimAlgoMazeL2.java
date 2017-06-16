@@ -42,6 +42,7 @@ public class PrimAlgoMazeL2 extends AbstractMaze {
     private static final String mazePlugin = "default";
     private int height;
     private int width;
+    private boolean[][] maze;
 
     @SuppressWarnings("unused")
     public PrimAlgoMazeL2() {
@@ -72,29 +73,47 @@ public class PrimAlgoMazeL2 extends AbstractMaze {
 
     @Override
     public void generate(int height, int width) throws IllegalArgumentException {
-        // TODO: 20.05.2017 sachen "outsourcen"
         if (height < 3 || width < 3) {
             throw new IllegalArgumentException(Strings.getString(Strings.ERROR_MAZE_GENERATION_BAD_SIZE, height,
                     width));
         }
         this.height = height;
         this.width = width;
-        boolean[][] maze = new boolean[width][height];
+        maze = new boolean[width][height];
 
-        // TODO: 20.05.2017 erstes feld zufällig wählen, variablennamen -> englisch
-        int zufX = ThreadLocalRandom.current().nextInt(1, width - 1);
-        int zufY = ThreadLocalRandom.current().nextInt(1, height - 1);
-        if (zufX % 2 == 0) {
-            zufX--;
-        }
-        if (zufY % 2 == 0) {
-            zufY--;
-        }
-        maze[zufX][zufY] = true;
+        // coordinatesWithPossibleConnections are coordinates of intersections which might connect to a new intersection
         Set<Coordinates> coordinatesWithPossibleConnections = new HashSet<>();
-        coordinatesWithPossibleConnections.add(new Coordinates(zufX, zufY));
+        coordinatesWithPossibleConnections.add(setRandomCoordinates());
 
-        // TODO: 20.05.2017 findPossibleConnections (anhand cWPC), und aktualisiere dabei cWPC
+        while (!coordinatesWithPossibleConnections.isEmpty()) {
+            // possibleConnections are coordinates between two intersections
+            ArrayList<Coordinates> possibleConnections = findPossibleConnections(coordinatesWithPossibleConnections);
+            Coordinates connectionCoordinates = possibleConnections.get(ThreadLocalRandom.current().nextInt(0,
+                    possibleConnections.size()));
+
+            setConnection(connectionCoordinates, coordinatesWithPossibleConnections);
+        }
+        // TODO: 22.05.2017 try multithreading with:
+        // TODO: 22.05.2017 a) thread.count = 1; b) thread.count = core.count; c) thread.count = n * core.count
+    }
+
+    @NotNull
+    private Coordinates setRandomCoordinates() {
+        int ranX = ThreadLocalRandom.current().nextInt(1, width - 1);
+        int ranY = ThreadLocalRandom.current().nextInt(1, height - 1);
+        if (ranX % 2 == 0) {
+            ranX--;
+        }
+        if (ranY % 2 == 0) {
+            ranY--;
+        }
+        maze[ranX][ranY] = true;
+        return new Coordinates(ranX, ranY);
+    }
+
+    @NotNull
+    private ArrayList<Coordinates> findPossibleConnections(@NotNull Set<Coordinates>
+                                                                   coordinatesWithPossibleConnections) {
         Iterator<Coordinates> iterator = coordinatesWithPossibleConnections.iterator();
         ArrayList<Coordinates> possibleConnections = new ArrayList<>();
         while (iterator.hasNext()) {
@@ -118,27 +137,26 @@ public class PrimAlgoMazeL2 extends AbstractMaze {
                 iterator.remove();
             }
         }
+        return possibleConnections;
+    }
 
-        // TODO: 20.05.2017 wähle connection füg sie hinzu und wiederhole
-        Coordinates connectionCoordinates = possibleConnections.get(ThreadLocalRandom.current().nextInt(0,
-                possibleConnections.size()));
-        Coordinates coordinates1;
-        Coordinates coordinates2;
+    private void setConnection(@NotNull Coordinates connectionCoordinates, @NotNull Set<Coordinates>
+            coordinatesWithPossibleConnections) {
+        Coordinates startCoordinates;
+        Coordinates endCoordinates;
         if (connectionCoordinates.getX() % 2 == 0) {
             // connection is vertical
-            coordinates1 = new Coordinates(connectionCoordinates.getX(), connectionCoordinates.getY() + 1);
-            coordinates2 = new Coordinates(connectionCoordinates.getX(), connectionCoordinates.getY() - 1);
+            startCoordinates = new Coordinates(connectionCoordinates.getX(), connectionCoordinates.getY() + 1);
+            endCoordinates = new Coordinates(connectionCoordinates.getX(), connectionCoordinates.getY() - 1);
         } else {
             // connection is horizontal
-            coordinates1 = new Coordinates(connectionCoordinates.getX() + 1, connectionCoordinates.getY());
-            coordinates2 = new Coordinates(connectionCoordinates.getX() - 1, connectionCoordinates.getY());
+            startCoordinates = new Coordinates(connectionCoordinates.getX() + 1, connectionCoordinates.getY());
+            endCoordinates = new Coordinates(connectionCoordinates.getX() - 1, connectionCoordinates.getY());
         }
         maze[connectionCoordinates.getX()][connectionCoordinates.getY()] = true;
-        maze[coordinates1.getX()][coordinates1.getY()] = true;
-        maze[coordinates2.getX()][coordinates2.getY()] = true;
-        coordinatesWithPossibleConnections.add(coordinates1);
-        coordinatesWithPossibleConnections.add(coordinates2);
-        // TODO: 22.05.2017 try multithreading with:
-        // TODO: 22.05.2017 a) thread.count = 1; b) thread.count = core.count; c) thread.count = n * core.count
+        maze[startCoordinates.getX()][startCoordinates.getY()] = true;
+        maze[endCoordinates.getX()][endCoordinates.getY()] = true;
+        coordinatesWithPossibleConnections.add(startCoordinates);
+        coordinatesWithPossibleConnections.add(endCoordinates);
     }
 }
