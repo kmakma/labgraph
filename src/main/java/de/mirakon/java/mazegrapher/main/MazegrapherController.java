@@ -244,7 +244,8 @@ public class MazegrapherController {
             if (checkedMazes.size() == 0) {
                 checkFirstMaze();
             }
-            randomMazeName = GenericMethods.getElementXFromSet(checkedMazes, ThreadLocalRandom.current().nextInt(checkedMazes.size()));
+            randomMazeName = GenericMethods.getElementXFromSet(checkedMazes, ThreadLocalRandom.current().nextInt
+                    (checkedMazes.size()));
         }
         Maze randomMaze = mazes.get(randomMazeName);
         return randomMaze.newInstance();
@@ -326,7 +327,14 @@ public class MazegrapherController {
 
     @FXML
     private void generateActionMViewer(ActionEvent actionEvent) {
+        // TODO: 16.06.2017 some loading animation
         // TODO: 22.05.2017 create a thead, and stuff happens
+        // TODO: 16.06.2017 get random sizes
+        // TODO: 16.06.2017 get random maze
+        // TODO: 16.06.2017 generate maze
+        // TODO: 16.06.2017 get result
+        // TODO: 16.06.2017 display result
+        // TODO: 16.06.2017 wenn diese methode aufgerufen wird während gearbeitet frag ob abgebrochen werden soll
     }
 
     private static class MazeItem {

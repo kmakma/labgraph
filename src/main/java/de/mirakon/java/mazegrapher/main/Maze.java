@@ -73,7 +73,7 @@ public interface Maze {
      *
      * @param height of the maze, walls on both sides included
      * @param width  of the maze, walls on both sides included
-     * @throws IllegalArgumentException if sizes are negative or to small
+     * @throws IllegalArgumentException if sizes are negative or too small
      */
     void generate(int height, int width) throws IllegalArgumentException;
 
