@@ -111,11 +111,7 @@ public class MazegrapherController {
     }
 
     private void checkSettings() {
-        // TODO: 20.05.2017 when pulling some setting and it doesn't exist set default
-        // FIXME: 16.06.2017 #settings, prüfe welche settings nicht gesetzt sind und setzte diese
-        if (!settings.getBoolean(SettingsController.ALL_SETTINGS_SET, false)) {
-            SettingsController.setDefaultSettings();
-        }
+        SettingsController.setDefaultSettings(false);
     }
 
     private void fetchMazes() throws MissingMazeArgumentException, IllegalStateException {
@@ -251,8 +247,8 @@ public class MazegrapherController {
     }
 
     private int getRandomMazeHeight() throws IllegalStateException {
-        int maxMazeHeight = settings.getInt(SettingsController.MAX_MAZE_HEIGHT, -1);
-        int minMazeHeight = settings.getInt(SettingsController.MIN_MAZE_HEIGHT, -1);
+        int maxMazeHeight = settings.getInt(Setting.MAX_MAZE_HEIGHT.key(), -1);
+        int minMazeHeight = settings.getInt(Setting.MIN_MAZE_HEIGHT.key(), -1);
         if (maxMazeHeight < 1 || minMazeHeight < 1) {
             throw new IllegalStateException(strings.getString("errorReadingSettings"));
         }
@@ -260,8 +256,8 @@ public class MazegrapherController {
     }
 
     private int getRandomMazeWidth() throws IllegalStateException {
-        int maxMazeWidth = settings.getInt(SettingsController.MAX_MAZE_WIDTH, -1);
-        int minMazeWidth = settings.getInt(SettingsController.MIN_MAZE_WIDTH, -1);
+        int maxMazeWidth = settings.getInt(Setting.MAX_MAZE_WIDTH.key(), -1);
+        int minMazeWidth = settings.getInt(Setting.MIN_MAZE_WIDTH.key(), -1);
         if (maxMazeWidth < 1 || minMazeWidth < 1) {
             throw new IllegalStateException(strings.getString("errorReadingSettings"));
         }

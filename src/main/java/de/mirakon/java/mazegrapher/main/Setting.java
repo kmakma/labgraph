@@ -18,18 +18,33 @@
 
 package de.mirakon.java.mazegrapher.main;
 
-import java.util.prefs.Preferences;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
-public class SettingsController {
-//    private Preferences settings = Preferences.userNodeForPackage(this.getClass());
+public enum Setting {
+    MAX_MAZE_HEIGHT("maximumMazeHeight", 20),
+    MAX_MAZE_WIDTH("maximumMazeWidth", 20),
+    MIN_MAZE_HEIGHT("minimumMazeHeight", 10),
+    MIN_MAZE_WIDTH("minimumMazeWidth", 10);
 
-    public static void setDefaultSettings(boolean forceOverwrite) {
-        // TODO: 16.06.2017 diese methode und enum Setting für verschiedene settings typen vorbereiten
-        Preferences settings = Preferences.userNodeForPackage(SettingsController.class);
-        for (Setting setting : Setting.values()) {
-            if (forceOverwrite || settings.getInt(setting.key(), Setting.DEFAULT_INT) == Setting.DEFAULT_INT) {
-                settings.putInt(setting.key(), setting.defaultValue());
-            }
-        }
+    private final String key;
+    private final int defaultValue;
+
+    public static final int DEFAULT_INT = Integer.MIN_VALUE;
+
+    Setting(String key, int defaultValue) {
+        this.key = key;
+        this.defaultValue = defaultValue;
+    }
+
+    @Contract(pure = true)
+    @NotNull
+    public String key() {
+        return key;
+    }
+
+    @Contract(pure = true)
+    public int defaultValue() {
+        return defaultValue;
     }
 }

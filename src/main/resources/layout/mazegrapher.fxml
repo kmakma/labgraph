@@ -46,7 +46,8 @@
                             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
                         </rowConstraints>
                     </GridPane>
-                    <!-- TODO 16.06.2017: add abort/cancel button -->
+                    <!-- TODO: 16.06.2017 add abort/cancel button -->
+                    <!-- TODO: 16.06.2017 add option "use random values" -->
                     <Button mnemonicParsing="false" onAction="#generateActionMViewer" text="%generate"/>
                 </VBox>
             </Tab>
