@@ -26,11 +26,12 @@ import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.geometry.HPos;
+import javafx.geometry.VPos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxListCell;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.jetbrains.annotations.Contract;
@@ -52,10 +53,14 @@ public class MazegrapherController {
 
     // TODO: 22.05.2017 performance test /z.b. für mazes, mit 300x300 mazes
 
+    // RESIZING INFO: https://stackoverflow.com/questions/24082063/chessboard-with-automatic-resizing
+
     public static final String CHECKEDMAZES_PREF_NODE = "checkedmazes";
     private final Set<String> checkedMazes = Collections.synchronizedSet(new HashSet<>());
     @FXML
     private Accordion accordionMazes;
+    @FXML
+    private GridPane mazeViewerMaze;
     @FXML
     private TextArea mazeDescription;
     private ResourceBundle strings;
@@ -321,7 +326,31 @@ public class MazegrapherController {
     }
 
     private void showMazeInMV(@NotNull boolean[][] maze) {
-        // TODO: 16.06.2017 display result
+        mazeViewerMaze.getChildren().clear();
+        mazeViewerMaze.getRowConstraints().clear();
+        mazeViewerMaze.getColumnConstraints().clear();
+
+        int maxSize = Math.max(maze.length, maze[0].length);
+
+        for (int row = 0; row < maze.length; row++) {
+            for (int column = 0; column < maze[row].length; column++) {
+                StackPane stackPane = new StackPane();
+                String color;
+                if (maze[row][column]) {
+                    color = "white";
+                } else {
+                    color = "black";
+                }
+                stackPane.setStyle("-fx-background-color: " + color + ";");
+                mazeViewerMaze.add(stackPane, column, row);
+            }
+        }
+        for (int i = 0; i < maxSize; i++) {
+            mazeViewerMaze.getColumnConstraints().add(new ColumnConstraints(5, Control.USE_COMPUTED_SIZE, Double
+                    .POSITIVE_INFINITY, Priority.ALWAYS, HPos.CENTER, true));
+            mazeViewerMaze.getRowConstraints().add(new RowConstraints(5, Control.USE_COMPUTED_SIZE, Double
+                    .POSITIVE_INFINITY, Priority.ALWAYS, VPos.CENTER, true));
+        }
     }
 
     @FXML

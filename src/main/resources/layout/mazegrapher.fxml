@@ -12,47 +12,37 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<VBox xmlns:fx="http://javafx.com/fxml/1" prefHeight="500.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/8.0.112"
-      fx:controller="de.mirakon.java.mazegrapher.main.MazegrapherController">
+<VBox prefHeight="500.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.mirakon.java.mazegrapher.main.MazegrapherController">
     <MenuBar>
         <Menu mnemonicParsing="false" text="File">
-            <MenuItem mnemonicParsing="false" text="Close"/>
+            <MenuItem mnemonicParsing="false" text="Close" />
         </Menu>
         <Menu mnemonicParsing="false" text="Edit">
-            <MenuItem mnemonicParsing="false" text="Delete"/>
+            <MenuItem mnemonicParsing="false" text="Delete" />
         </Menu>
         <Menu mnemonicParsing="false" text="Help">
-            <MenuItem mnemonicParsing="false" text="About"/>
+            <MenuItem mnemonicParsing="false" text="About" />
         </Menu>
     </MenuBar>
     <!-- TODO splitPane eine prefWidth und Höhe geben, den kindern nur minimal werte -->
     <SplitPane dividerPositions="0.25" VBox.vgrow="ALWAYS">
         <SplitPane dividerPositions="0.75" orientation="VERTICAL" VBox.vgrow="ALWAYS">
             <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" minWidth="0.0">
-                <Accordion fx:id="accordionMazes"/>
+                <Accordion fx:id="accordionMazes" />
             </ScrollPane>
-            <TextArea fx:id="mazeDescription" editable="false" text="%descriptionPlaceholder" wrapText="true"/>
+            <TextArea fx:id="mazeDescription" editable="false" text="%descriptionPlaceholder" wrapText="true" />
         </SplitPane>
         <TabPane tabClosingPolicy="UNAVAILABLE">
             <Tab text="%mazeViewer">
                 <VBox>
-                    <GridPane>
-                        <columnConstraints>
-                            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
-                            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
-                        </columnConstraints>
-                        <rowConstraints>
-                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-                        </rowConstraints>
-                    </GridPane>
+                    <GridPane fx:id="mazeViewerMaze" VBox.vgrow="ALWAYS"/>
                     <!-- TODO: 16.06.2017 add abort/cancel button -->
                     <!-- TODO: 16.06.2017 add option "use random values" -->
-                    <Button mnemonicParsing="false" onAction="#generateActionMViewer" text="%generate"/>
+                    <Button mnemonicParsing="false" onAction="#generateActionMViewer" text="%generate" />
                 </VBox>
             </Tab>
             <Tab text="%mazeRunner">
-                <VBox/>
+                <VBox />
             </Tab>
         </TabPane>
     </SplitPane>

@@ -93,22 +93,23 @@ public class PrimAlgoMazeL2 extends AbstractMaze {
 
         // coordinatesWithPossibleConnections are coordinates of intersections which might connect to a new intersection
         Set<Coordinates> coordinatesWithPossibleConnections = new HashSet<>();
-        coordinatesWithPossibleConnections.add(setRandomCoordinates());
+        coordinatesWithPossibleConnections.add(getRandomCoordinates());
 
         while (!coordinatesWithPossibleConnections.isEmpty()) {
             // possibleConnections are coordinates between two intersections
             ArrayList<Coordinates> possibleConnections = findPossibleConnections(coordinatesWithPossibleConnections);
-            Coordinates connectionCoordinates = possibleConnections.get(ThreadLocalRandom.current().nextInt(0,
-                    possibleConnections.size()));
-
-            setConnection(connectionCoordinates, coordinatesWithPossibleConnections);
+            if(!possibleConnections.isEmpty()) {
+                Coordinates connectionCoordinates = possibleConnections.get(ThreadLocalRandom.current().nextInt(0,
+                        possibleConnections.size()));
+                setConnection(connectionCoordinates, coordinatesWithPossibleConnections);
+            }
         }
         // TODO: 22.05.2017 try multithreading with:
         // TODO: 22.05.2017 a) thread.count = 1; b) thread.count = core.count; c) thread.count = n * core.count
     }
 
     @NotNull
-    private Coordinates setRandomCoordinates() {
+    private Coordinates getRandomCoordinates() {
         int ranX = ThreadLocalRandom.current().nextInt(1, width - 1);
         int ranY = ThreadLocalRandom.current().nextInt(1, height - 1);
         if (ranX % 2 == 0) {
@@ -155,7 +156,7 @@ public class PrimAlgoMazeL2 extends AbstractMaze {
             coordinatesWithPossibleConnections) {
         Coordinates startCoordinates;
         Coordinates endCoordinates;
-        if (connectionCoordinates.getX() % 2 == 0) {
+        if (connectionCoordinates.getY() % 2 == 0) {
             // connection is vertical
             startCoordinates = new Coordinates(connectionCoordinates.getX(), connectionCoordinates.getY() + 1);
             endCoordinates = new Coordinates(connectionCoordinates.getX(), connectionCoordinates.getY() - 1);
